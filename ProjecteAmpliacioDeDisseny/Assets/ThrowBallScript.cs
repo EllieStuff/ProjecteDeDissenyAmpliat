@@ -63,7 +63,7 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_DIR:
-                moveDir = ((Vector2)transform.position - mousePos);
+                moveDir = ((Vector2)transform.position - mousePos).normalized;
 
                 break;
 
