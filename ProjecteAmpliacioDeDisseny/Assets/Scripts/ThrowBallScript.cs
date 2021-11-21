@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ThrowBallScript : MonoBehaviour
 {
-    public enum State { EDITING, EDITING_POS = 0, EDITING_FORCE, EDITING_DIR, THROWING }
+    public enum State { EDITING, EDITING_POS = 0, EDITING_FORCE, EDITING_DIR, THROWING, WAITING_FOR_THROW, THROW_DONE }
     public State currState = State.EDITING;
 
     public float maxRange = 5.0f;
@@ -32,17 +32,17 @@ public class ThrowBallScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         realInitPos = transform.position;
+
+        ChangeCurrState(State.EDITING_POS);
     }
 
     // Update is called once per frame
     void Update()
     {
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetKeyUp(KeyCode.Mouse0) && Vector3.Distance(mousePos, transform.position) < maxRange)
-        {
-            rb.isKinematic = false;
-            rb.AddForce(moveDir * initForce, ForceMode.Impulse);
-        }
+        StateMachine();
+
+        if ((int)currState >= (int)State.EDITING_DIR)
+            Debug.DrawRay(transform.position, moveDir, Color.red);
 
     }
 
@@ -63,7 +63,24 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_DIR:
-                moveDir = ((Vector2)transform.position - mousePos).normalized;
+                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                if (Input.GetKey(KeyCode.Mouse0) && Vector3.Distance(mousePos, transform.position) < maxRange)
+                {
+                    Debug.Log("In");
+                    moveDir = ((Vector2)transform.position - mousePos).normalized;
+                }
+
+                break;
+
+            case State.THROWING:
+                rb.isKinematic = false;
+                rb.AddForce(moveDir * initForce, ForceMode.Impulse);
+                ChangeCurrState(State.WAITING_FOR_THROW);
+
+                break;
+
+            case State.WAITING_FOR_THROW:
+
 
                 break;
 
@@ -89,9 +106,44 @@ public class ThrowBallScript : MonoBehaviour
         );
     }
 
+    private void ChangeCurrState(State _newState)
+    {
+        CurrStateSetActive(false);
+        currState = _newState;
+        CurrStateSetActive(true);
+    }
+
+    private void CurrStateSetActive(bool _activate)
+    {
+        switch (currState)
+        {
+            case State.EDITING_POS:
+                initialX.gameObject.SetActive(_activate);
+                initialY.gameObject.SetActive(_activate);
+
+                break;
+
+            case State.EDITING_FORCE:
+                forceX.gameObject.SetActive(_activate);
+                forceY.gameObject.SetActive(_activate);
+
+                break;
+
+            case State.EDITING_DIR:
+
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
     public void NextState()
     {
+        CurrStateSetActive(false);
         currState++;
+        CurrStateSetActive(true);
     }
 
 }
