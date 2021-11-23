@@ -99,7 +99,7 @@ public class ThrowBallScript : MonoBehaviour
 
                 }
 
-                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir);
+                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir, rb.mass);
 
                 break;
 
