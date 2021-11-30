@@ -787,6 +787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 288268020}
   - component: {fileID: 288268021}
+  - component: {fileID: 288268022}
   m_Layer: 5
   m_Name: InitialY Slider
   m_TagString: Untagged
@@ -867,6 +868,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &288268022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288268019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9b4939055204348887a1bae9ef4e7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpSpeed: 8
 --- !u!1 &313575037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,6 +1674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 559004400}
   - component: {fileID: 559004401}
+  - component: {fileID: 559004402}
   m_Layer: 5
   m_Name: ForcelY Slider
   m_TagString: Untagged
@@ -1740,6 +1755,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &559004402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559004399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9b4939055204348887a1bae9ef4e7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpSpeed: 8
 --- !u!1 &586180493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1980,6 +2008,7 @@ GameObject:
   m_Component:
   - component: {fileID: 940601230}
   - component: {fileID: 940601231}
+  - component: {fileID: 940601232}
   m_Layer: 5
   m_Name: InitialX Slider
   m_TagString: Untagged
@@ -2060,6 +2089,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &940601232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940601229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9b4939055204348887a1bae9ef4e7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpSpeed: 8
 --- !u!1 &1034937294
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,6 +2971,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1426460543}
   - component: {fileID: 1426460544}
+  - component: {fileID: 1426460545}
   m_Layer: 5
   m_Name: ForceX Slider
   m_TagString: Untagged
@@ -3009,6 +3052,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1426460545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426460542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9b4939055204348887a1bae9ef4e7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpSpeed: 8
 --- !u!1 &1436576435
 GameObject:
   m_ObjectHideFlags: 0
@@ -3237,6 +3293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recorderState: 0
+  targetFrameRate: 90
 --- !u!1 &1533470680
 GameObject:
   m_ObjectHideFlags: 0

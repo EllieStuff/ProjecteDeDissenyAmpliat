@@ -7,6 +7,7 @@ public class InputsRecorder : MonoBehaviour
     const int INT_CAPACITY = 2147483647;
     enum RecorderState { OFF, RECORDING, PLAYING }
     [SerializeField] RecorderState recorderState = RecorderState.OFF;
+    [SerializeField] int targetFrameRate = 30;
 
     CustomInputModule inputModule;
     
@@ -29,6 +30,8 @@ public class InputsRecorder : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = targetFrameRate;
+
         inputModule = GetComponent<CustomInputModule>();
         StartRecording();
     }
