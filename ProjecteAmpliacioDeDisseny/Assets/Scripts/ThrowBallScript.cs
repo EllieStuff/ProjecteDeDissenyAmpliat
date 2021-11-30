@@ -14,28 +14,31 @@ public class ThrowBallScript : MonoBehaviour
     public Vector2 initialPosIncrease = Vector2.zero;
     public Vector2 initialForceIncrease = Vector2.zero;
 
-    [SerializeField] Slider initialXSlider;
-    [SerializeField] Slider initialYSlider;
-    [SerializeField] Slider forceXSlider;
-    [SerializeField] Slider forceYSlider;
+    public Slider initialXSlider;
+    public Slider initialYSlider;
+    public Slider forceXSlider;
+    public Slider forceYSlider;
 
     Rigidbody rb;
     GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
-    InputsRecorder recorder;
+    //InputsRecorder recorder;
+    ValuesRecorder recorder;
     Vector2 realInitPos;
     Vector2 initPos;
     Vector2 initForce = Vector2.zero;
     Vector2 moveDir = Vector2.zero;
     Vector2 mousePos;
 
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         trajectoryScript = GetComponentInChildren<TrajectoryCalculator>();
-        recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<InputsRecorder>();
-        
+        //recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<InputsRecorder>();
+        recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
+
         realInitPos = transform.position;
 
         InitForceArrows();
@@ -80,27 +83,37 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_DIR:
-                if (Input.GetKey(KeyCode.Mouse0) || recorder.CurrFrameMousePressed)
+                if (!recorder.IsPlaying)
                 {
-                    Ray ray;
-                    if (recorder.IsPlaying) ray = Camera.main.ScreenPointToRay(recorder.CurrFrameMousePosition);
-                    else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
+                    if (Input.GetKey(KeyCode.Mouse0) /*|| recorder.CurrFrameMousePressed*/)
                     {
-                        if (!hit.transform.tag.Equals("NoClickAreas"))
+                        Ray ray;
+                        //if (recorder.IsPlaying) ray = Camera.main.ScreenPointToRay(recorder.CurrFrameMousePosition);
+                        //else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                        RaycastHit hit;
+                        if (Physics.Raycast(ray, out hit))
                         {
-                            if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-                            else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            if (!hit.transform.tag.Equals("NoClickAreas"))
+                            {
+                                //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+                                //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                                moveDir = ((Vector2)transform.position - mousePos).normalized;
+                            }
+
+                        }
+                        else
+                        {
+                            //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+                            //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
                             moveDir = ((Vector2)transform.position - mousePos).normalized;
                         }
 
-                    }
-                    else
-                    {
-                        if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-                        else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                        moveDir = ((Vector2)transform.position - mousePos).normalized;
                     }
 
                 }
@@ -224,6 +237,16 @@ public class ThrowBallScript : MonoBehaviour
             CurrStateSetActive(true);
         }
 
+    }
+
+
+    public Vector2 GetMoveDir()
+    {
+        return moveDir;
+    }
+    public void SetMoveDir(Vector2 _moveDir)
+    {
+        moveDir = _moveDir;
     }
 
 }

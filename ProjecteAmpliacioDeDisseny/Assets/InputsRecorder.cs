@@ -7,6 +7,7 @@ public class InputsRecorder : MonoBehaviour
     const int INT_CAPACITY = 2147483647;
     enum RecorderState { OFF, RECORDING, PLAYING }
     [SerializeField] RecorderState recorderState = RecorderState.OFF;
+    [SerializeField] int targetFrameRate = 30;
 
     CustomInputModule inputModule;
     
@@ -18,17 +19,20 @@ public class InputsRecorder : MonoBehaviour
     }
     List<MouseData> mouseData = new List<MouseData>();
 
-    private int
-        framesRecorded = 0,
-        framePlaying = 0;
+    //private int
+    //    framesRecorded = 0,
+    //    framePlaying = 0;
+    bool canUpdate = true;
 
     public bool IsPlaying { get { return recorderState == RecorderState.PLAYING; } }
-    public Vector2 CurrFrameMousePosition { get { return mouseData[framePlaying].position; } }
-    public bool CurrFrameMousePressed { get { return mouseData[framePlaying].pressed; } }
+    public Vector2 CurrFrameMousePosition { get { return mouseData[0].position; } }
+    public bool CurrFrameMousePressed { get { return mouseData[0].pressed; } }
 
 
     private void Start()
     {
+        Application.targetFrameRate = targetFrameRate;
+
         inputModule = GetComponent<CustomInputModule>();
         StartRecording();
     }
@@ -36,38 +40,64 @@ public class InputsRecorder : MonoBehaviour
 
     private void Update()
     {
-        switch (recorderState)
+        if (canUpdate)
         {
-            case RecorderState.OFF:
-                // Do Nothing
+            switch (recorderState)
+            {
+                case RecorderState.OFF:
+                    // Do Nothing
 
-                break;
+                    break;
 
-            case RecorderState.RECORDING:
-                mouseData.Add(new MouseData(Input.mousePosition, inputModule.IsPressed, inputModule.IsReleased));
-                if (framesRecorded < INT_CAPACITY)
-                    framesRecorded++;
+                case RecorderState.RECORDING:
+                    mouseData.Insert(0, new MouseData(Input.mousePosition, inputModule.IsPressed, inputModule.IsReleased));
 
-                break;
+                    //mouseData.Add(new MouseData(Input.mousePosition, inputModule.IsPressed, inputModule.IsReleased));
+                    //if (framesRecorded < INT_CAPACITY)
+                    //    framesRecorded++;
 
-            case RecorderState.PLAYING:
-                //inputModule.enabled = true;
-                inputModule.SetMouseState(mouseData[framePlaying].position, mouseData[framePlaying].pressed, mouseData[framePlaying].released);
-                Debug.Log("mouseClicked: " + mouseData[framePlaying]);
-                if (framePlaying < framesRecorded - 1)
-                    framePlaying++;
-                else
-                    StopPlaying();
+                    break;
 
-                //inputModule.enabled = false;
+                case RecorderState.PLAYING:
+                    if (mouseData.Count > 0)
+                    {
+                        MouseData tmpMouseData = mouseData[mouseData.Count - 1];
+                        inputModule.SetMouseState(tmpMouseData.position, tmpMouseData.pressed, tmpMouseData.released);
+                        mouseData.RemoveAt(mouseData.Count - 1);
+                    }
+                    else
+                    {
+                        StopPlaying();
+                    }
 
-                break;
+                    //inputModule.enabled = true;
+                    //inputModule.SetMouseState(mouseData[framePlaying].position, mouseData[framePlaying].pressed, mouseData[framePlaying].released);
+                    //Debug.Log("mouseClicked: " + mouseData[framePlaying]);
+                    //if (framePlaying < framesRecorded - 1)
+                    //    framePlaying++;
+                    //else
+                    //    StopPlaying();
+
+                    //inputModule.enabled = false;
 
 
-            default:
-                break;
+                    break;
+
+
+                default:
+                    break;
+            }
+
+            //canUpdate = false;
+
         }
 
+    }
+
+    private void FixedUpdate()
+    {
+        if (recorderState != RecorderState.OFF)
+            canUpdate = true;
     }
 
 
@@ -84,7 +114,8 @@ public class InputsRecorder : MonoBehaviour
     [ContextMenu("EraseRecording")]
     public void EraseRecording()
     {
-        framesRecorded = framePlaying = 0;
+        //framesRecorded = framePlaying = 0;
+        mouseData.Clear();
         mouseData = new List<MouseData>();
     }
 
@@ -94,7 +125,7 @@ public class InputsRecorder : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         //inputModule.enabled = false;
-        framePlaying = 0;
+        //framePlaying = 0;
         recorderState = RecorderState.PLAYING;
     }
     [ContextMenu("ReStartPlaying")]
