@@ -1437,7 +1437,7 @@ GameObject:
   - component: {fileID: 538627804}
   m_Layer: 0
   m_Name: Player Ball
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3169,6 +3169,7 @@ GameObject:
   - component: {fileID: 1519059262}
   - component: {fileID: 1519059260}
   - component: {fileID: 1519059263}
+  - component: {fileID: 1519059264}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: EventSystem
@@ -3231,9 +3232,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519059259}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70949739a3b52d549b97be93ac2be3f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recorderState: 0
+  targetFrameRate: 30
+--- !u!114 &1519059264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519059259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5ed170017464c40be9b97e08db9a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   recorderState: 0

@@ -4,24 +4,29 @@ using UnityEngine;
 
 public class ValuesRecorder : MonoBehaviour
 {
+    public enum ButtonsState { NULL, FRONTWARD, BACKWARD }
     enum RecorderState { OFF, RECORDING, PLAYING }
+
     [SerializeField] RecorderState recorderState = RecorderState.OFF;
     [SerializeField] int targetFrameRate = 30;
     
     ThrowBallScript playerScript;
 
-    struct SavedData
+    class SavedData
     {
         public Vector2
             initPosSlider,
             initForceSlider,
             moveDirBall;
-        public SavedData(Vector2 _initPosSlider, Vector2 _initForceSlider, Vector2 _movePointBall) 
-            { initPosSlider = _initPosSlider; initForceSlider = _initForceSlider; moveDirBall = _movePointBall; }
+        public ButtonsState buttonState;
+        public SavedData(Vector2 _initPosSlider, Vector2 _initForceSlider, Vector2 _movePointBall, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { initPosSlider = _initPosSlider; initForceSlider = _initForceSlider; moveDirBall = _movePointBall; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
 
+    public bool IsWorking { get { return recorderState != RecorderState.OFF; } }
+    public bool IsRecording { get { return recorderState == RecorderState.RECORDING; } }
     public bool IsPlaying { get { return recorderState == RecorderState.PLAYING; } }
     public Vector2 CurrFrameInitPosSlider { get { return savedData[savedData.Count - 1].initPosSlider; } }
     public Vector2 CurrFrameInitForceSlider { get { return savedData[savedData.Count - 1].initForceSlider; } }
@@ -70,6 +75,7 @@ public class ValuesRecorder : MonoBehaviour
                     playerScript.forceXSlider.value = savedData[idx].initForceSlider.x;
                     playerScript.forceYSlider.value = savedData[idx].initForceSlider.y;
                     playerScript.SetMoveDir(savedData[idx].moveDirBall);
+                    ApplyFrameButtonStateEffect();
 
                     savedData.RemoveAt(idx);
 
@@ -146,6 +152,37 @@ public class ValuesRecorder : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         //inputModule.enabled = true;
         recorderState = RecorderState.OFF;
+    }
+
+
+    public void SetFrameButtomState(ButtonsState _buttonsState)
+    {
+        savedData[0].buttonState = _buttonsState;
+    }
+    private void ApplyFrameButtonStateEffect()
+    {
+        switch(savedData[savedData.Count - 1].buttonState)
+        {
+            case ButtonsState.NULL:
+                // Do nothing
+
+                break;
+
+            case ButtonsState.FRONTWARD:
+                playerScript.NextState();
+
+                break;
+
+            case ButtonsState.BACKWARD:
+                playerScript.LastState();
+
+                break;
+
+            default:
+                break;
+
+        }
+
     }
 
 

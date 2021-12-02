@@ -225,6 +225,9 @@ public class ThrowBallScript : MonoBehaviour
             CurrStateSetActive(false);
             currState++;
             CurrStateSetActive(true);
+
+            if (recorder.IsRecording) 
+                recorder.SetFrameButtomState(ValuesRecorder.ButtonsState.FRONTWARD);
         }
 
     }
@@ -235,6 +238,9 @@ public class ThrowBallScript : MonoBehaviour
             CurrStateSetActive(false);
             currState--;
             CurrStateSetActive(true);
+
+            if(recorder.IsRecording)
+                recorder.SetFrameButtomState(ValuesRecorder.ButtonsState.BACKWARD);
         }
 
     }
