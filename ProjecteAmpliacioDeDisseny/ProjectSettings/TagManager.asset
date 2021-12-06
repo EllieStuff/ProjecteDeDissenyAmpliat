@@ -6,6 +6,8 @@ TagManager:
   tags:
   - NoClickAreas
   - EventSystem
+  - Floor
+  - Target
   layers:
   - Default
   - TransparentFX
