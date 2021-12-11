@@ -8,18 +8,27 @@ public class ThrowBallScript : MonoBehaviour
 {
     const float MINIMUM_FORCE = 1.0f;
 
-    public enum State { DEFAULT = 0, EDITING_POS, EDITING_FORCE, EDITING_DIR, THROWING, WAITING_FOR_THROW, THROW_DONE, COUNT }
+    public enum State { DEFAULT = 0, EDITING_ITEM, EDITING_POS, EDITING_FORCE, EDITING_DIR, THROWING, WAITING_FOR_THROW, THROW_DONE, COUNT }
     public State currState = State.DEFAULT;
 
     public Vector2 initialPosIncrease = Vector2.zero;
     public Vector2 initialForceIncrease = Vector2.zero;
 
+    //public string[] itemsToChoose;
+    public Slider chooseItemSlider;
+    public bool useInitialPosSlider = false;
+    public Vector2[] initalPosArray;
+    public Slider initialPosSlider;
     public Slider initialXSlider;
     public Slider initialYSlider;
     public Slider forceXSlider;
     public Slider forceYSlider;
 
-    Rigidbody rb;
+    Transform throwItemsFather;
+    Transform currItemTransform;
+    Rigidbody currItemRb;
+    int currItemId;
+    Transform forceArrowsFather;
     GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
     //InputsRecorder recorder;
@@ -35,21 +44,27 @@ public class ThrowBallScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        trajectoryScript = GetComponentInChildren<TrajectoryCalculator>();
+        throwItemsFather = transform.GetChild(0);
+        currItemTransform = throwItemsFather.GetChild(0);
+        currItemRb = currItemTransform.GetComponent<Rigidbody>();
+        trajectoryScript = transform.GetChild(1).GetComponentInChildren<TrajectoryCalculator>();
         //recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<InputsRecorder>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
+
+        chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
+        initialPosSlider.maxValue = initalPosArray.Length - 1;
 
         realInitPos = transform.position;
         realInitRot = transform.rotation;
 
         InitForceArrows();
-        ChangeCurrState(State.EDITING_POS);
+        //ChangeCurrState(State.EDITING_POS);
+        ChangeCurrState(State.EDITING_ITEM);
     }
 
     private void InitForceArrows()
     {
-        Transform forceArrowsFather = transform.GetChild(0);
+        forceArrowsFather = transform.GetChild(1).GetChild(0);
         forceArrows = new GameObject[forceArrowsFather.childCount];
         for (int i = 0; i < forceArrows.Length; i++)
             forceArrows[i] = forceArrowsFather.GetChild(i).gameObject;
@@ -74,6 +89,15 @@ public class ThrowBallScript : MonoBehaviour
     {
         switch (currState)
         {
+            case State.EDITING_ITEM:
+                // ToDo
+                SetChosenItem();
+
+                // De momento...
+                NextState();
+
+                break;
+
             case State.EDITING_POS:
                 transform.position = initPos = GetInitialPos();
 
@@ -120,13 +144,13 @@ public class ThrowBallScript : MonoBehaviour
 
                 }
 
-                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir, rb.mass);
+                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir, currItemRb.mass);
 
                 break;
 
             case State.THROWING:
-                rb.isKinematic = false;
-                rb.AddForce(moveDir * initForce, ForceMode.Impulse);
+                currItemRb.isKinematic = false;
+                currItemRb.AddForce(moveDir * initForce, ForceMode.Impulse);
                 ChangeCurrState(State.WAITING_FOR_THROW);
 
                 break;
@@ -148,12 +172,27 @@ public class ThrowBallScript : MonoBehaviour
 
     }
 
+    private void SetChosenItem()
+    {
+        // ToDo:
+        //  - Activar un fill o un altre segons el valor del slider (agafats amb transfrom.GetChild(slider.value); )
+        //  - Reasignar el rb perque agafi el del fill i es controli tot des del pare
+
+    }
+
     Vector2 GetInitialPos()
     {
-        return new Vector2(
-            realInitPos.x + initialXSlider.value * initialPosIncrease.x,
-            realInitPos.y + initialYSlider.value * initialPosIncrease.y
-        );
+        if (useInitialPosSlider)
+        {
+            return initalPosArray[(int)initialPosSlider.value];
+        }
+        else
+        {
+            return new Vector2(
+                realInitPos.x + initialXSlider.value * initialPosIncrease.x,
+                realInitPos.y + initialYSlider.value * initialPosIncrease.y
+            );
+        }
     }
 
     private Vector2 GetInitialForce()
@@ -172,7 +211,11 @@ public class ThrowBallScript : MonoBehaviour
 
     private void EverythingSetActive(bool _activate)
     {
+        // Choosing Item
+        //chooseItemSlider.gameObject.SetActive(_activate);
+
         // Editing Pos
+        //initialPosSlider.gameObject.SetActive(_activate);
         initialXSlider.gameObject.SetActive(_activate);
         initialYSlider.gameObject.SetActive(_activate);
 
@@ -203,9 +246,21 @@ public class ThrowBallScript : MonoBehaviour
 
                 break;
 
+            case State.EDITING_ITEM:
+                chooseItemSlider.gameObject.SetActive(_activate);
+
+                break;
+
             case State.EDITING_POS:
-                initialXSlider.gameObject.SetActive(_activate);
-                initialYSlider.gameObject.SetActive(_activate);
+                if (useInitialPosSlider)
+                {
+                    initialPosSlider.gameObject.SetActive(_activate);
+                }
+                else
+                {
+                    initialXSlider.gameObject.SetActive(_activate);
+                    initialYSlider.gameObject.SetActive(_activate);
+                }
 
                 break;
 
@@ -265,7 +320,7 @@ public class ThrowBallScript : MonoBehaviour
     {
         EverythingSetActive(true);
 
-        rb.isKinematic = true;
+        currItemRb.isKinematic = true;
         transform.position = realInitPos;
         transform.rotation = realInitRot;
 
@@ -283,13 +338,13 @@ public class ThrowBallScript : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter(Collision col)
-    {
-        if(currState == State.WAITING_FOR_THROW && (col.transform.CompareTag("Floor") || col.transform.CompareTag("Target")))
-        {
-            NextState();
-        }
+    //private void OnCollisionEnter(Collision col)
+    //{
+    //    if(currState == State.WAITING_FOR_THROW && (col.transform.CompareTag("Floor") || col.transform.CompareTag("Target")))
+    //    {
+    //        NextState();
+    //    }
 
-    }
+    //}
 
 }
