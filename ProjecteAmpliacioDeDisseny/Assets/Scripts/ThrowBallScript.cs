@@ -14,27 +14,34 @@ public class ThrowBallScript : MonoBehaviour
     public Vector2 initialPosIncrease = Vector2.zero;
     public Vector2 initialForceIncrease = Vector2.zero;
 
-    [SerializeField] Slider initialXSlider;
-    [SerializeField] Slider initialYSlider;
-    [SerializeField] Slider forceXSlider;
-    [SerializeField] Slider forceYSlider;
+    public Slider initialXSlider;
+    public Slider initialYSlider;
+    public Slider forceXSlider;
+    public Slider forceYSlider;
 
     Rigidbody rb;
     GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
+    //InputsRecorder recorder;
+    ValuesRecorder recorder;
     Vector2 realInitPos;
+    Quaternion realInitRot;
     Vector2 initPos;
     Vector2 initForce = Vector2.zero;
     Vector2 moveDir = Vector2.zero;
     Vector2 mousePos;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         trajectoryScript = GetComponentInChildren<TrajectoryCalculator>();
-        
+        //recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<InputsRecorder>();
+        recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
+
         realInitPos = transform.position;
+        realInitRot = transform.rotation;
 
         InitForceArrows();
         ChangeCurrState(State.EDITING_POS);
@@ -78,23 +85,37 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_DIR:
-                if (Input.GetKey(KeyCode.Mouse0))
+                if (!recorder.IsPlaying)
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
+                    if (Input.GetKey(KeyCode.Mouse0) /*|| recorder.CurrFrameMousePressed*/)
                     {
-                        if (!hit.transform.tag.Equals("NoClickAreas"))
+                        Ray ray;
+                        //if (recorder.IsPlaying) ray = Camera.main.ScreenPointToRay(recorder.CurrFrameMousePosition);
+                        //else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                        RaycastHit hit;
+                        if (Physics.Raycast(ray, out hit))
                         {
+                            if (!hit.transform.tag.Equals("NoClickAreas"))
+                            {
+                                //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+                                //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+                                moveDir = ((Vector2)transform.position - mousePos).normalized;
+                            }
+
+                        }
+                        else
+                        {
+                            //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+                            //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
                             moveDir = ((Vector2)transform.position - mousePos).normalized;
                         }
 
-                    }
-                    else
-                    {
-                        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                        moveDir = ((Vector2)transform.position - mousePos).normalized;
                     }
 
                 }
@@ -111,7 +132,13 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.WAITING_FOR_THROW:
+                // Interact On Collision
 
+                break;
+
+            case State.THROW_DONE:
+                // ToDo: tema menus i esperar per animacions i stuff
+                NextState();
 
                 break;
 
@@ -201,11 +228,22 @@ public class ThrowBallScript : MonoBehaviour
 
     public void NextState()
     {
-        if (currState < State.COUNT - 1)
+        if (currState < State.COUNT)
         {
             CurrStateSetActive(false);
             currState++;
+            if (currState >= State.COUNT)
+            {
+                ReinitValues();
+                currState = State.EDITING_POS;
+
+                recorder.StartPlaying();
+            }
             CurrStateSetActive(true);
+
+
+            if (recorder.IsRecording) 
+                recorder.SetFrameButtomState(ValuesRecorder.ButtonsState.FRONTWARD);
         }
 
     }
@@ -216,6 +254,40 @@ public class ThrowBallScript : MonoBehaviour
             CurrStateSetActive(false);
             currState--;
             CurrStateSetActive(true);
+
+            if(recorder.IsRecording)
+                recorder.SetFrameButtomState(ValuesRecorder.ButtonsState.BACKWARD);
+        }
+
+    }
+
+    private void ReinitValues()
+    {
+        EverythingSetActive(true);
+
+        rb.isKinematic = true;
+        transform.position = realInitPos;
+        transform.rotation = realInitRot;
+
+        EverythingSetActive(false);
+    }
+
+
+    public Vector2 GetMoveDir()
+    {
+        return moveDir;
+    }
+    public void SetMoveDir(Vector2 _moveDir)
+    {
+        moveDir = _moveDir;
+    }
+
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if(currState == State.WAITING_FOR_THROW && (col.transform.CompareTag("Floor") || col.transform.CompareTag("Target")))
+        {
+            NextState();
         }
 
     }
