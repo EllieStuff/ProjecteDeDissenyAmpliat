@@ -34,10 +34,16 @@ public class ThrowBallScript : MonoBehaviour
     ValuesRecorder recorder;
     Vector2 realInitPos;
     Quaternion realInitRot;
+    Vector2 mousePos;
+    
     Vector2 initPos;
     Vector2 initForce = Vector2.zero;
     Vector2 moveDir = Vector2.zero;
-    Vector2 mousePos;
+    public Vector2 InitPos { get { return initPos; } }
+    public Vector2 InitForce { get { return initForce; } }
+    public Vector2 MoveDir { get { return moveDir; } }
+    public Vector2 CurrItemPos { get { return currItem.transform.position; } }
+    public float CurrItemMass { get { return currItem.RB.mass; } }
 
     private bool repetitionPlayed = false;
 
@@ -97,7 +103,6 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_ITEM:
-                // ToDo
                 SetChosenItem();
 
                 break;
@@ -198,6 +203,11 @@ public class ThrowBallScript : MonoBehaviour
             throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
             currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
             currItem.transform.position = initPos;
+
+            if (!recorder.IsPlaying)
+                realInitRot = currItem.transform.rotation;
+            else
+                currItem.transform.rotation = realInitRot;
 
         }
 
@@ -318,7 +328,7 @@ public class ThrowBallScript : MonoBehaviour
                     repetitionPlayed = true;
                     ReinitValues();
                     currState = State.EDITING_ITEM;
-                    GameObject.Find("SceneObjects").GetComponent<RestartSceneObjects>().restoreSceneObjects();
+                    GameObject.FindGameObjectWithTag("SceneObjects").GetComponent<RestartSceneObjects>().RestoreSceneObjects();
                     recorder.StartPlaying();
                 }
                 else

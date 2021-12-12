@@ -148,6 +148,7 @@ public class ValuesRecorder : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 0.5f;
         //inputModule.enabled = false;
         //framePlaying = 0;
         recorderState = RecorderState.PLAYING;
@@ -165,6 +166,7 @@ public class ValuesRecorder : MonoBehaviour
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 1.0f;
         //inputModule.enabled = true;
         recorderState = RecorderState.OFF;
     }

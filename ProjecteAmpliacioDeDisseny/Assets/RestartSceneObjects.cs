@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class RestartSceneObjects : MonoBehaviour
 {
-    public Vector3[] _sceneObjectsPos;
-    public Quaternion[] _sceneObjectsRot;
+    [SerializeField] Vector3[] _sceneObjectsPos;
+    [SerializeField] Quaternion[] _sceneObjectsRot;
     
     int childCount = 0;
 
@@ -17,17 +17,21 @@ public class RestartSceneObjects : MonoBehaviour
 
         for (int i = 0; i < childCount; i++)
         {
-            _sceneObjectsPos[i] = this.transform.GetChild(i).transform.position;
-            _sceneObjectsRot[i] = this.transform.GetChild(i).transform.rotation;
+            Transform child = this.transform.GetChild(i);
+            _sceneObjectsPos[i] = child.position;
+            _sceneObjectsRot[i] = child.rotation;
         }
     }
 
-    public void restoreSceneObjects()
+    public void RestoreSceneObjects()
     {      
         for (int i = 0; i < childCount; i++)
         {
-            this.transform.GetChild(i).transform.position = _sceneObjectsPos[i];
-            this.transform.GetChild(i).transform.rotation = _sceneObjectsRot[i];
+            Transform child = this.transform.GetChild(i);
+            child.position = _sceneObjectsPos[i];
+            child.rotation = _sceneObjectsRot[i];
+            Rigidbody childRb = child.GetComponent<Rigidbody>();
+            childRb.velocity = childRb.angularVelocity = Vector3.zero;
         }
         Debug.Log("Restored");
     }

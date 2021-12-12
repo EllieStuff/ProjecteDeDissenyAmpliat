@@ -9,6 +9,7 @@ TagManager:
   - Floor
   - Target
   - PlayerManager
+  - SceneObjects
   layers:
   - Default
   - TransparentFX
