@@ -318,6 +318,7 @@ public class ThrowBallScript : MonoBehaviour
                     repetitionPlayed = true;
                     ReinitValues();
                     currState = State.EDITING_ITEM;
+                    GameObject.Find("SceneObjects").GetComponent<RestartSceneObjects>().restoreSceneObjects();
                     recorder.StartPlaying();
                 }
                 else
