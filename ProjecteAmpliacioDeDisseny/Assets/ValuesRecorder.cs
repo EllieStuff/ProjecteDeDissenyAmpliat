@@ -14,13 +14,16 @@ public class ValuesRecorder : MonoBehaviour
 
     class SavedData
     {
+        public int 
+            chooseItemSlider,
+            initPosSliderInt = 0;
         public Vector2
-            initPosSlider,
+            initPosSlider = Vector2.zero,
             initForceSlider,
-            moveDirBall;
+            mousePos;
         public ButtonsState buttonState;
-        public SavedData(Vector2 _initPosSlider, Vector2 _initForceSlider, Vector2 _movePointBall, ButtonsState _buttonsState = ButtonsState.NULL) 
-            { initPosSlider = _initPosSlider; initForceSlider = _initForceSlider; moveDirBall = _movePointBall; buttonState = _buttonsState; }
+        public SavedData(int _chooseItemSlider, /*int _initPosSliderInt, Vector2 _initPosSlider,*/ Vector2 _initForceSlider, Vector2 _mousePos, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { chooseItemSlider = _chooseItemSlider; /*initPosSliderInt = _initPosSliderInt; initPosSlider = _initPosSlider;*/ initForceSlider = _initForceSlider; mousePos = _mousePos; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
@@ -30,14 +33,14 @@ public class ValuesRecorder : MonoBehaviour
     public bool IsPlaying { get { return recorderState == RecorderState.PLAYING; } }
     public Vector2 CurrFrameInitPosSlider { get { return savedData[savedData.Count - 1].initPosSlider; } }
     public Vector2 CurrFrameInitForceSlider { get { return savedData[savedData.Count - 1].initForceSlider; } }
-    public Vector2 CurrFrameMovePointBall { get { return savedData[savedData.Count - 1].moveDirBall; } }
+    public Vector2 CurrFrameMoveDirItem { get { return savedData[savedData.Count - 1].mousePos; } }
 
 
     private void Start()
     {
         Application.targetFrameRate = targetFrameRate;
 
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<ThrowBallScript>();
+        playerScript = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<ThrowBallScript>();
 
         StartRecording();
     }
@@ -54,11 +57,18 @@ public class ValuesRecorder : MonoBehaviour
 
             case RecorderState.RECORDING:
                 savedData.Insert(0, new SavedData(
-                        new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value),
+                        (int)playerScript.chooseItemSlider.value,
+                        //(int)playerScript.initialPosSlider.value,
+                        //new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value), 
                         new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value),
                         playerScript.GetMoveDir()
                     )
                 );
+
+                if (playerScript.useInitialPosSlider)
+                    savedData[0].initPosSliderInt = (int)playerScript.initialPosSlider.value;
+                else
+                    savedData[0].initPosSlider = new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value);
 
                 //mouseData.Add(new MouseData(Input.mousePosition, inputModule.IsPressed, inputModule.IsReleased));
                 //if (framesRecorded < INT_CAPACITY)
@@ -70,11 +80,16 @@ public class ValuesRecorder : MonoBehaviour
                 if (savedData.Count > 0)
                 {
                     int idx = savedData.Count - 1;
-                    playerScript.initialXSlider.value = savedData[idx].initPosSlider.x;
-                    playerScript.initialYSlider.value = savedData[idx].initPosSlider.y;
+                    playerScript.chooseItemSlider.value = savedData[idx].chooseItemSlider;
+                    if (playerScript.useInitialPosSlider) {
+                        playerScript.initialPosSlider.value = savedData[idx].initPosSliderInt;
+                    } else {
+                        playerScript.initialXSlider.value = savedData[idx].initPosSlider.x;
+                        playerScript.initialYSlider.value = savedData[idx].initPosSlider.y;
+                    }
                     playerScript.forceXSlider.value = savedData[idx].initForceSlider.x;
                     playerScript.forceYSlider.value = savedData[idx].initForceSlider.y;
-                    playerScript.SetMoveDir(savedData[idx].moveDirBall);
+                    //playerScript.SetMoveDir(savedData[idx].movePointItem);
                     ApplyFrameButtonStateEffect();
 
                     savedData.RemoveAt(idx);
@@ -157,7 +172,8 @@ public class ValuesRecorder : MonoBehaviour
 
     public void SetFrameButtomState(ButtonsState _buttonsState)
     {
-        savedData[0].buttonState = _buttonsState;
+        if (savedData.Count > 0)
+            savedData[0].buttonState = _buttonsState;
     }
     private void ApplyFrameButtonStateEffect()
     {
