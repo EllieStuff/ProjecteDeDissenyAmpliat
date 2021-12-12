@@ -25,9 +25,8 @@ public class ThrowBallScript : MonoBehaviour
     public Slider forceYSlider;
 
     Transform throwItemsFather;
-    Transform currItemTransform;
-    Rigidbody currItemRb;
-    int currItemId;
+    ThrowItemScript currItem;
+    int currItemId = 0;
     Transform forceArrowsFather;
     GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
@@ -40,26 +39,27 @@ public class ThrowBallScript : MonoBehaviour
     Vector2 moveDir = Vector2.zero;
     Vector2 mousePos;
 
+    private bool repetitionPlayed = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
         throwItemsFather = transform.GetChild(0);
-        currItemTransform = throwItemsFather.GetChild(0);
-        currItemRb = currItemTransform.GetComponent<Rigidbody>();
+        currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
+        realInitPos = currItem.transform.position;
+        realInitRot = currItem.transform.rotation;
+
         trajectoryScript = transform.GetChild(1).GetComponentInChildren<TrajectoryCalculator>();
-        //recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<InputsRecorder>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
 
         chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         initialPosSlider.maxValue = initalPosArray.Length - 1;
 
-        realInitPos = transform.position;
-        realInitRot = transform.rotation;
-
         InitForceArrows();
+
         //ChangeCurrState(State.EDITING_POS);
-        ChangeCurrState(State.EDITING_ITEM);
+        //ChangeCurrState(State.EDITING_ITEM);
     }
 
     private void InitForceArrows()
@@ -74,12 +74,12 @@ public class ThrowBallScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         StateMachine();
 
         if ((int)currState >= (int)State.EDITING_DIR)
-            Debug.DrawRay(transform.position, moveDir, Color.red);
+            Debug.DrawRay(currItem.transform.position, moveDir, Color.red);
 
     }
 
@@ -89,17 +89,21 @@ public class ThrowBallScript : MonoBehaviour
     {
         switch (currState)
         {
-            case State.EDITING_ITEM:
-                // ToDo
-                SetChosenItem();
+            case State.DEFAULT:
+                currItem.transform.position = initPos = GetInitialPos();
 
-                // De momento...
                 NextState();
 
                 break;
 
+            case State.EDITING_ITEM:
+                // ToDo
+                SetChosenItem();
+
+                break;
+
             case State.EDITING_POS:
-                transform.position = initPos = GetInitialPos();
+                trajectoryScript.transform.position = forceArrowsFather.position = currItem.transform.position = initPos = GetInitialPos();
 
                 break;
 
@@ -127,7 +131,7 @@ public class ThrowBallScript : MonoBehaviour
                                 //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                                 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                                moveDir = ((Vector2)transform.position - mousePos).normalized;
+                                moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
                             }
 
                         }
@@ -137,21 +141,31 @@ public class ThrowBallScript : MonoBehaviour
                             //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                            moveDir = ((Vector2)transform.position - mousePos).normalized;
+                            moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
                         }
 
                     }
 
                 }
+                else
+                {
+                    //mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+                    //moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
 
-                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir, currItemRb.mass);
+                    moveDir = recorder.CurrFrameMoveDirItem;
+                }
+
+                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir, currItem.RB.mass);
 
                 break;
 
             case State.THROWING:
-                currItemRb.isKinematic = false;
-                currItemRb.AddForce(moveDir * initForce, ForceMode.Impulse);
-                ChangeCurrState(State.WAITING_FOR_THROW);
+                currItem.RB.isKinematic = false;
+                Debug.Log("moveDir: " + moveDir);
+                Debug.Log("initForce: " + initForce);
+                currItem.RB.AddForce(moveDir * initForce, ForceMode.Impulse);
+
+                NextState();
 
                 break;
 
@@ -162,6 +176,7 @@ public class ThrowBallScript : MonoBehaviour
 
             case State.THROW_DONE:
                 // ToDo: tema menus i esperar per animacions i stuff
+                //currItem.RB.isKinematic = true;
                 NextState();
 
                 break;
@@ -174,9 +189,18 @@ public class ThrowBallScript : MonoBehaviour
 
     private void SetChosenItem()
     {
-        // ToDo:
-        //  - Activar un fill o un altre segons el valor del slider (agafats amb transfrom.GetChild(slider.value); )
-        //  - Reasignar el rb perque agafi el del fill i es controli tot des del pare
+        if(currItemId != (int)chooseItemSlider.value)
+        {
+            currItemId = (int)chooseItemSlider.value;
+
+            currItem.gameObject.SetActive(false);
+
+            throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
+            currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
+            currItem.transform.position = initPos;
+
+        }
+
 
     }
 
@@ -212,10 +236,10 @@ public class ThrowBallScript : MonoBehaviour
     private void EverythingSetActive(bool _activate)
     {
         // Choosing Item
-        //chooseItemSlider.gameObject.SetActive(_activate);
+        chooseItemSlider.gameObject.SetActive(_activate);
 
         // Editing Pos
-        //initialPosSlider.gameObject.SetActive(_activate);
+        initialPosSlider.gameObject.SetActive(_activate);
         initialXSlider.gameObject.SetActive(_activate);
         initialYSlider.gameObject.SetActive(_activate);
 
@@ -289,10 +313,17 @@ public class ThrowBallScript : MonoBehaviour
             currState++;
             if (currState >= State.COUNT)
             {
-                ReinitValues();
-                currState = State.EDITING_POS;
-
-                recorder.StartPlaying();
+                if (!repetitionPlayed)
+                {
+                    repetitionPlayed = true;
+                    ReinitValues();
+                    currState = State.EDITING_ITEM;
+                    recorder.StartPlaying();
+                }
+                else
+                {
+                    recorder.StopPlaying();
+                }
             }
             CurrStateSetActive(true);
 
@@ -318,9 +349,9 @@ public class ThrowBallScript : MonoBehaviour
 
     private void ReinitValues()
     {
-        EverythingSetActive(true);
+        //EverythingSetActive(true);
 
-        currItemRb.isKinematic = true;
+        currItem.RB.isKinematic = true;
         transform.position = realInitPos;
         transform.rotation = realInitRot;
 
@@ -332,19 +363,9 @@ public class ThrowBallScript : MonoBehaviour
     {
         return moveDir;
     }
-    public void SetMoveDir(Vector2 _moveDir)
-    {
-        moveDir = _moveDir;
-    }
-
-
-    //private void OnCollisionEnter(Collision col)
+    //public void SetMoveDir(Vector2 _moveDir)
     //{
-    //    if(currState == State.WAITING_FOR_THROW && (col.transform.CompareTag("Floor") || col.transform.CompareTag("Target")))
-    //    {
-    //        NextState();
-    //    }
-
+    //    moveDir = _moveDir;
     //}
 
 }
