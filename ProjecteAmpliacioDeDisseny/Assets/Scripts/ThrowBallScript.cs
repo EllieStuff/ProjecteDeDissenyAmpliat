@@ -330,7 +330,7 @@ public class ThrowBallScript : MonoBehaviour
                     currState = State.EDITING_ITEM;
                     GameObject _sceneObjects = GameObject.Find("SceneObjects");
                     _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(false);
-                    _sceneObjects.GetComponent<RestartSceneObjects>().restoreSceneObjects();
+                    _sceneObjects.GetComponent<RestartSceneObjects>().RestoreSceneObjects();
                     GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = true;
                     recorder.StartPlaying();
                     _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(true);
