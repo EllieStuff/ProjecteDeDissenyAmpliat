@@ -328,12 +328,17 @@ public class ThrowBallScript : MonoBehaviour
                     repetitionPlayed = true;
                     ReinitValues();
                     currState = State.EDITING_ITEM;
-                    GameObject.FindGameObjectWithTag("SceneObjects").GetComponent<RestartSceneObjects>().RestoreSceneObjects();
+                    GameObject _sceneObjects = GameObject.Find("SceneObjects");
+                    _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(false);
+                    _sceneObjects.GetComponent<RestartSceneObjects>().restoreSceneObjects();
+                    GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = true;
                     recorder.StartPlaying();
+                    _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(true);
                 }
                 else
                 {
                     recorder.StopPlaying();
+                    GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
                 }
             }
             CurrStateSetActive(true);

@@ -4,28 +4,46 @@ using UnityEngine;
 
 public class RestartSceneObjects : MonoBehaviour
 {
-    [SerializeField] Vector3[] _sceneObjectsPos;
-    [SerializeField] Quaternion[] _sceneObjectsRot;
+    public Vector3[] _throwObjectsPos;
+    public Quaternion[] _throwObjectsRot;
+
+    public Vector3[] _sceneObjectsPos;
+    public Quaternion[] _sceneObjectsRot;
     
-    int childCount = 0;
+    int throwChildCount = 0;
+    int sObjectsChildCount = 0;
+
+    private GameObject throwParentGameObject;
 
     void Start()
     {
-        childCount = this.transform.childCount;
-        _sceneObjectsPos = new Vector3[childCount];
-        _sceneObjectsRot = new Quaternion[childCount];
+        sObjectsChildCount = this.transform.childCount;
+        _sceneObjectsPos = new Vector3[sObjectsChildCount];
+        _sceneObjectsRot = new Quaternion[sObjectsChildCount];
 
-        for (int i = 0; i < childCount; i++)
+        for (int i = 0; i < sObjectsChildCount; i++)
         {
             Transform child = this.transform.GetChild(i);
             _sceneObjectsPos[i] = child.position;
             _sceneObjectsRot[i] = child.rotation;
         }
+
+        throwParentGameObject = GameObject.Find("ThrowItems");
+
+        throwChildCount = throwParentGameObject.transform.childCount;
+        _throwObjectsPos = new Vector3[throwChildCount];
+        _throwObjectsRot = new Quaternion[throwChildCount];
+
+        for (int i = 0; i < throwChildCount; i++)
+        {
+            _throwObjectsPos[i] = throwParentGameObject.transform.GetChild(i).transform.position;
+            _throwObjectsRot[i] = throwParentGameObject.transform.GetChild(i).transform.localRotation;
+        }
     }
 
     public void RestoreSceneObjects()
     {      
-        for (int i = 0; i < childCount; i++)
+        for (int i = 0; i < sObjectsChildCount; i++)
         {
             Transform child = this.transform.GetChild(i);
             child.position = _sceneObjectsPos[i];
@@ -33,6 +51,20 @@ public class RestartSceneObjects : MonoBehaviour
             Rigidbody childRb = child.GetComponent<Rigidbody>();
             childRb.velocity = childRb.angularVelocity = Vector3.zero;
         }
-        Debug.Log("Restored");
+
+        for (int i = 0; i < throwChildCount; i++)
+        {
+            throwParentGameObject.transform.GetChild(i).transform.position = _throwObjectsPos[i];
+            throwParentGameObject.transform.GetChild(i).transform.localRotation = _throwObjectsRot[i];
+        }
+    }
+
+    public void manageGravity(bool isActive)
+    {
+        for (int i = 0; i < sObjectsChildCount; i++)
+        {
+            this.transform.GetChild(i).GetComponent<Rigidbody>().useGravity = isActive;
+            this.transform.GetChild(i).GetComponent<Rigidbody>().isKinematic = !isActive;
+        }
     }
 }
