@@ -35,9 +35,10 @@ public class TrajectoryCalculator : MonoBehaviour
             if (_moveDir != Vector2.zero)
             {
                 //d = V(0)*t + 1/2*a*t^2
+                Vector2 initVel = ((_initForce * _moveDir) / _mass);
                 Vector3 finalPos = new Vector2(
-                    _initPos.x + (_initForce.x * _moveDir.x * currTimeDiff),
-                    _initPos.y + (_initForce.y * _moveDir.y * currTimeDiff) + (0.5f * GRAVITY * _mass * Mathf.Pow(currTimeDiff, 2))
+                    _initPos.x + (initVel.x * currTimeDiff),
+                    _initPos.y + (initVel.y * currTimeDiff) + (0.5f * GRAVITY * /*_mass **/ Mathf.Pow(currTimeDiff, 2))
                 );
                 trajectoryPoints[i].position = finalPos;
 
