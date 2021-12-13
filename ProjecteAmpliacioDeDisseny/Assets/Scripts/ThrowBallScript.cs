@@ -339,6 +339,7 @@ public class ThrowBallScript : MonoBehaviour
                 {
                     recorder.StopPlaying();
                     GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
+                    GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
                 }
             }
             CurrStateSetActive(true);
