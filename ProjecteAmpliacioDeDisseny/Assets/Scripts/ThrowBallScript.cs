@@ -166,8 +166,8 @@ public class ThrowBallScript : MonoBehaviour
 
             case State.THROWING:
                 currItem.RB.isKinematic = false;
-                Debug.Log("moveDir: " + moveDir);
-                Debug.Log("initForce: " + initForce);
+                //Debug.Log("moveDir: " + moveDir);
+                //Debug.Log("initForce: " + initForce);
                 currItem.RB.AddForce(moveDir * initForce, ForceMode.Impulse);
 
                 NextState();

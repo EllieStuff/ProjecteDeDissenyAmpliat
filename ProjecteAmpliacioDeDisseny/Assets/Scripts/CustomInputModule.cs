@@ -42,7 +42,7 @@ public class CustomInputModule : StandaloneInputModule
         if (mouseData.AnyPressesThisFrame()) mouseIsPressed = true;
         else if (mouseData.AnyReleasesThisFrame()) mouseIsPressed = false;
 
-        Debug.Log(IsReleased);
+        //Debug.Log(IsReleased);
     }
 
 

@@ -64,7 +64,7 @@ public class SliderLerper : MonoBehaviour
         if (checkForChanges)
         {
             checkForChanges = false;
-            Debug.Log("in");
+            //Debug.Log("in");
             timer = 0.0f;
             targetValue = slider.value;
             slider.value = initValue = currValue;
