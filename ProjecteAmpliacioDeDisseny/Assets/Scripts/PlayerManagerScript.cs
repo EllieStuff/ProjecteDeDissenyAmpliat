@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ThrowBallScript : MonoBehaviour
+public class PlayerManagerScript : MonoBehaviour
 {
     const float MINIMUM_FORCE = 1.0f;
 
@@ -15,7 +15,8 @@ public class ThrowBallScript : MonoBehaviour
     public Vector2 initialForceIncrease = Vector2.zero;
 
     //public string[] itemsToChoose;
-    public Slider chooseItemSlider;
+    //public Slider chooseItemSlider;
+    public ChooseWeaponScript chooseWeaponScript;
     public bool useInitialPosSlider = false;
     public Vector2[] initalPosArray;
     public Slider initialPosSlider;
@@ -25,8 +26,8 @@ public class ThrowBallScript : MonoBehaviour
     public Slider forceYSlider;
 
     Transform throwItemsFather;
-    ThrowItemScript currItem;
-    int currItemId = 0;
+    ThrowItemScript currItem = null;
+    public int currItemId = -1;
     Transform forceArrowsFather;
     GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
@@ -52,14 +53,15 @@ public class ThrowBallScript : MonoBehaviour
     void Start()
     {
         throwItemsFather = transform.GetChild(0);
-        currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
-        realInitPos = currItem.transform.position;
-        realInitRot = currItem.transform.rotation;
+        //currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
 
-        trajectoryScript = transform.GetChild(1).GetComponentInChildren<TrajectoryCalculator>();
+        realInitPos = transform.position;
+        realInitRot = transform.rotation;
+
+        trajectoryScript = transform.GetChild(2).GetComponentInChildren<TrajectoryCalculator>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
 
-        chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
+        //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         initialPosSlider.maxValue = initalPosArray.Length - 1;
 
         InitForceArrows();
@@ -70,7 +72,7 @@ public class ThrowBallScript : MonoBehaviour
 
     private void InitForceArrows()
     {
-        forceArrowsFather = transform.GetChild(1).GetChild(0);
+        forceArrowsFather = transform.GetChild(2).GetChild(0);
         forceArrows = new GameObject[forceArrowsFather.childCount];
         for (int i = 0; i < forceArrows.Length; i++)
             forceArrows[i] = forceArrowsFather.GetChild(i).gameObject;
@@ -96,7 +98,7 @@ public class ThrowBallScript : MonoBehaviour
         switch (currState)
         {
             case State.DEFAULT:
-                currItem.transform.position = initPos = GetInitialPos();
+                transform.position = initPos = GetInitialPos();
 
                 NextState();
 
@@ -108,7 +110,8 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_POS:
-                trajectoryScript.transform.position = forceArrowsFather.position = currItem.transform.position = initPos = GetInitialPos();
+                transform.position = initPos = GetInitialPos();
+                trajectoryScript.transform.position = forceArrowsFather.position = currItem.transform.position;
 
                 break;
 
@@ -160,7 +163,7 @@ public class ThrowBallScript : MonoBehaviour
                     moveDir = recorder.CurrFrameMoveDirItem;
                 }
 
-                trajectoryScript.CalculateTrajectory(initPos, initForce, moveDir, currItem.RB.mass);
+                trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, moveDir, currItem.RB.mass);
 
                 break;
 
@@ -192,22 +195,23 @@ public class ThrowBallScript : MonoBehaviour
 
     }
 
-    private void SetChosenItem()
+    public void SetChosenItem()
     {
-        if(currItemId != (int)chooseItemSlider.value)
+        if(currItemId != chooseWeaponScript.CurrUsedIdx)
         {
-            currItemId = (int)chooseItemSlider.value;
+            currItemId = chooseWeaponScript.CurrUsedIdx;
 
-            currItem.gameObject.SetActive(false);
+            if (currItem != null)
+                currItem.gameObject.SetActive(false);
 
             throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
             currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
-            currItem.transform.position = initPos;
+            //currItem.transform.position = initPos;
 
-            if (!recorder.IsPlaying)
-                realInitRot = currItem.transform.rotation;
-            else
-                currItem.transform.rotation = realInitRot;
+            //if (!recorder.IsPlaying)
+            //    realInitRot = currItem.transform.rotation;
+            //else
+            //    currItem.transform.rotation = realInitRot;
 
         }
 
@@ -246,7 +250,7 @@ public class ThrowBallScript : MonoBehaviour
     private void EverythingSetActive(bool _activate)
     {
         // Choosing Item
-        chooseItemSlider.gameObject.SetActive(_activate);
+        chooseWeaponScript.gameObject.SetActive(_activate);
 
         // Editing Pos
         initialPosSlider.gameObject.SetActive(_activate);
@@ -281,7 +285,7 @@ public class ThrowBallScript : MonoBehaviour
                 break;
 
             case State.EDITING_ITEM:
-                chooseItemSlider.gameObject.SetActive(_activate);
+                chooseWeaponScript.gameObject.SetActive(_activate);
 
                 break;
 
@@ -319,6 +323,13 @@ public class ThrowBallScript : MonoBehaviour
     {
         if (currState < State.COUNT)
         {
+            if (currItem == null && currState >= State.EDITING_ITEM)
+            {
+                // ToDo: Play Impeding SFX
+
+                return;
+            }
+
             CurrStateSetActive(false);
             currState++;
             if (currState >= State.COUNT)
