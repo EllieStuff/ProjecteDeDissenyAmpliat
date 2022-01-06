@@ -10,6 +10,7 @@ TagManager:
   - Target
   - PlayerManager
   - SceneObjects
+  - PlayerWeapon
   layers:
   - Default
   - TransparentFX

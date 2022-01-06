@@ -8,7 +8,7 @@ public class MRUATextScript : MonoBehaviour
     private const string MRUA_DEFAULT_TEXT = "D.x = Do.x + Vo.x * t <br>" +
                                              "D.y = Do.y + Vo.y * t + 1/2 * g * t^2";
     
-    private ThrowBallScript playerManager;
+    private PlayerManagerScript playerManager;
     private ValuesRecorder recorder;
     private TextMeshProUGUI text;
 
@@ -18,7 +18,7 @@ public class MRUATextScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerManager = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<ThrowBallScript>();
+        playerManager = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
 
         text = GetComponent<TextMeshProUGUI>();
@@ -45,37 +45,37 @@ public class MRUATextScript : MonoBehaviour
     {
         switch (playerManager.currState)
         {
-            case ThrowBallScript.State.EDITING_ITEM:
+            case PlayerManagerScript.State.EDITING_ITEM:
                 text.text = MRUA_DEFAULT_TEXT;
 
                 break;
 
-            case ThrowBallScript.State.EDITING_POS:
+            case PlayerManagerScript.State.EDITING_POS:
                 text.text = "D.x = " + playerManager.InitPos.x.ToString("F2") + " + Vo.x * t <br>" +
                             "D.y = " + playerManager.InitPos.y.ToString("F2") + " + Vo.y * t + 1/2 * g * t^2";
 
                 break;
 
-            case ThrowBallScript.State.EDITING_FORCE:
+            case PlayerManagerScript.State.EDITING_FORCE:
                 Vector2 initVelProjected = playerManager.InitForce / playerManager.CurrItemMass;
                 text.text = "D.x = " + playerManager.InitPos.x.ToString("F2") + " + " + initVelProjected.x.ToString("F2") + " * t <br>" +
                             "D.y = " + playerManager.InitPos.y.ToString("F2") + " + " + initVelProjected.y.ToString("F2") + " * t + 1/2 * g * t^2";
 
                 break;
 
-            case ThrowBallScript.State.EDITING_DIR:
+            case PlayerManagerScript.State.EDITING_DIR:
                 initVel = playerManager.InitForce * playerManager.MoveDir / playerManager.CurrItemMass;
                 text.text = "D.x = " + playerManager.InitPos.x.ToString("F2") + " + " + initVel.x.ToString("F2") + " * t <br>" +
                             "D.y = " + playerManager.InitPos.y.ToString("F2") + " + " + initVel.y.ToString("F2") + " * t + 1/2 * g * t^2";
 
                 break;
 
-            case ThrowBallScript.State.THROWING:
+            case PlayerManagerScript.State.THROWING:
                 timePassed = 0.0f;
 
                 break;
 
-            case ThrowBallScript.State.WAITING_FOR_THROW:
+            case PlayerManagerScript.State.WAITING_FOR_THROW:
                 text.text = playerManager.CurrItemPos.x.ToString("F2") + " = " + playerManager.InitPos.x.ToString("F2") + " + " + initVel.x.ToString("F2") + " * " + timePassed.ToString("F2") + " <br>" +
                             playerManager.CurrItemPos.y.ToString("F2") + " = " + playerManager.InitPos.y.ToString("F2") + " + " + initVel.y.ToString("F2") + " * " + timePassed.ToString("F2") + " + 1/2 * g * " + timePassed.ToString("F2") + "^2";
 
@@ -83,7 +83,7 @@ public class MRUATextScript : MonoBehaviour
 
                 break;
 
-            case ThrowBallScript.State.THROW_DONE:
+            case PlayerManagerScript.State.THROW_DONE:
 
                 break;
 

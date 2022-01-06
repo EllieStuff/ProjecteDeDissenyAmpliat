@@ -10,20 +10,20 @@ public class ValuesRecorder : MonoBehaviour
     [SerializeField] RecorderState recorderState = RecorderState.OFF;
     [SerializeField] int targetFrameRate = 30;
     
-    ThrowBallScript playerScript;
+    PlayerManagerScript playerScript;
 
     class SavedData
     {
         public int 
-            chooseItemSlider,
+            chooseItemId,
             initPosSliderInt = 0;
         public Vector2
             initPosSlider = Vector2.zero,
             initForceSlider,
             mousePos;
         public ButtonsState buttonState;
-        public SavedData(int _chooseItemSlider, /*int _initPosSliderInt, Vector2 _initPosSlider,*/ Vector2 _initForceSlider, Vector2 _mousePos, ButtonsState _buttonsState = ButtonsState.NULL) 
-            { chooseItemSlider = _chooseItemSlider; /*initPosSliderInt = _initPosSliderInt; initPosSlider = _initPosSlider;*/ initForceSlider = _initForceSlider; mousePos = _mousePos; buttonState = _buttonsState; }
+        public SavedData(int _chooseItemId, /*int _initPosSliderInt, Vector2 _initPosSlider,*/ Vector2 _initForceSlider, Vector2 _mousePos, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { chooseItemId = _chooseItemId; /*initPosSliderInt = _initPosSliderInt; initPosSlider = _initPosSlider;*/ initForceSlider = _initForceSlider; mousePos = _mousePos; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
@@ -40,7 +40,7 @@ public class ValuesRecorder : MonoBehaviour
     {
         Application.targetFrameRate = targetFrameRate;
 
-        playerScript = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<ThrowBallScript>();
+        playerScript = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
 
         StartRecording();
     }
@@ -57,7 +57,7 @@ public class ValuesRecorder : MonoBehaviour
 
             case RecorderState.RECORDING:
                 savedData.Insert(0, new SavedData(
-                        (int)playerScript.chooseItemSlider.value,
+                        playerScript.currItemId,
                         //(int)playerScript.initialPosSlider.value,
                         //new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value), 
                         new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value),
@@ -80,7 +80,7 @@ public class ValuesRecorder : MonoBehaviour
                 if (savedData.Count > 0)
                 {
                     int idx = savedData.Count - 1;
-                    playerScript.chooseItemSlider.value = savedData[idx].chooseItemSlider;
+                    playerScript.currItemId = savedData[idx].chooseItemId;
                     if (playerScript.useInitialPosSlider) {
                         playerScript.initialPosSlider.value = savedData[idx].initPosSliderInt;
                     } else {
