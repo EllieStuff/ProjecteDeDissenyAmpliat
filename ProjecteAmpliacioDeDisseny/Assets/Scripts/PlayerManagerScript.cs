@@ -17,6 +17,7 @@ public class PlayerManagerScript : MonoBehaviour
     //public string[] itemsToChoose;
     //public Slider chooseItemSlider;
     public ChooseWeaponScript chooseWeaponScript;
+    public ChoosePositionScript choosePositionScript;
     public bool useInitialPosSlider = false;
     public Vector2[] initalPosArray;
     public Slider initialPosSlider;
@@ -25,6 +26,7 @@ public class PlayerManagerScript : MonoBehaviour
     public Slider forceXSlider;
     public Slider forceYSlider;
 
+    DragPlayer dragScript;
     Transform throwItemsFather;
     ThrowItemScript currItem = null;
     public int currItemId = -1;
@@ -55,14 +57,15 @@ public class PlayerManagerScript : MonoBehaviour
         throwItemsFather = transform.GetChild(0);
         //currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
 
-        realInitPos = transform.position;
+        dragScript = GetComponent<DragPlayer>();
+        realInitPos = initPos = transform.position;
         realInitRot = transform.rotation;
 
         trajectoryScript = transform.GetChild(2).GetComponentInChildren<TrajectoryCalculator>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
 
         //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
-        initialPosSlider.maxValue = initalPosArray.Length - 1;
+        //initialPosSlider.maxValue = initalPosArray.Length - 1;
 
         InitForceArrows();
 
@@ -98,7 +101,7 @@ public class PlayerManagerScript : MonoBehaviour
         switch (currState)
         {
             case State.DEFAULT:
-                transform.position = initPos = GetInitialPos();
+                //transform.position = initPos = GetInitialPos();
 
                 NextState();
 
@@ -110,7 +113,7 @@ public class PlayerManagerScript : MonoBehaviour
                 break;
 
             case State.EDITING_POS:
-                transform.position = initPos = GetInitialPos();
+                //transform.position = initPos = GetInitialPos(); --> Ara el PlayerSet es mou al script DragPlayer
                 trajectoryScript.transform.position = forceArrowsFather.position = currItem.transform.position;
 
                 break;
@@ -253,9 +256,8 @@ public class PlayerManagerScript : MonoBehaviour
         chooseWeaponScript.gameObject.SetActive(_activate);
 
         // Editing Pos
-        initialPosSlider.gameObject.SetActive(_activate);
-        initialXSlider.gameObject.SetActive(_activate);
-        initialYSlider.gameObject.SetActive(_activate);
+        dragScript.enabled = _activate;
+        choosePositionScript.SetCharacterPreviewsActive(_activate);
 
         // Editing Force
         forceXSlider.gameObject.SetActive(_activate);
@@ -290,15 +292,8 @@ public class PlayerManagerScript : MonoBehaviour
                 break;
 
             case State.EDITING_POS:
-                if (useInitialPosSlider)
-                {
-                    initialPosSlider.gameObject.SetActive(_activate);
-                }
-                else
-                {
-                    initialXSlider.gameObject.SetActive(_activate);
-                    initialYSlider.gameObject.SetActive(_activate);
-                }
+                dragScript.enabled = _activate;
+                choosePositionScript.SetCharacterPreviewsActive(_activate);
 
                 break;
 
