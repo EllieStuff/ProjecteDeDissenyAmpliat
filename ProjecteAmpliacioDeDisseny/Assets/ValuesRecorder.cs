@@ -19,11 +19,10 @@ public class ValuesRecorder : MonoBehaviour
             initPosSliderInt = 0;
         public Vector2
             initPosSlider = Vector2.zero,
-            initForceSlider,
-            mousePos;
+            initForceSlider;
         public ButtonsState buttonState;
-        public SavedData(int _chooseItemId, /*int _initPosSliderInt, Vector2 _initPosSlider,*/ Vector2 _initForceSlider, Vector2 _mousePos, ButtonsState _buttonsState = ButtonsState.NULL) 
-            { chooseItemId = _chooseItemId; /*initPosSliderInt = _initPosSliderInt; initPosSlider = _initPosSlider;*/ initForceSlider = _initForceSlider; mousePos = _mousePos; buttonState = _buttonsState; }
+        public SavedData(int _chooseItemId, /*int _initPosSliderInt, Vector2 _initPosSlider,*/ Vector2 _initForceSlider, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { chooseItemId = _chooseItemId; /*initPosSliderInt = _initPosSliderInt; initPosSlider = _initPosSlider;*/ initForceSlider = _initForceSlider; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
@@ -33,7 +32,6 @@ public class ValuesRecorder : MonoBehaviour
     public bool IsPlaying { get { return recorderState == RecorderState.PLAYING; } }
     public Vector2 CurrFrameInitPosSlider { get { return savedData[savedData.Count - 1].initPosSlider; } }
     public Vector2 CurrFrameInitForceSlider { get { return savedData[savedData.Count - 1].initForceSlider; } }
-    public Vector2 CurrFrameMoveDirItem { get { return savedData[savedData.Count - 1].mousePos; } }
 
 
     private void Start()
@@ -60,8 +58,7 @@ public class ValuesRecorder : MonoBehaviour
                         playerScript.currItemId,
                         //(int)playerScript.initialPosSlider.value,
                         //new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value), 
-                        new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value),
-                        playerScript.GetMoveDir()
+                        new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value)
                     )
                 );
 
