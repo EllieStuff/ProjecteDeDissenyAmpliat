@@ -63,12 +63,12 @@ public class MRUATextScript : MonoBehaviour
 
                 break;
 
-            case PlayerManagerScript.State.EDITING_DIR:
-                initVel = playerManager.InitForce * playerManager.MoveDir / playerManager.CurrItemMass;
-                text.text = "D.x = " + playerManager.InitPos.x.ToString("F2") + " + " + initVel.x.ToString("F2") + " * t <br>" +
-                            "D.y = " + playerManager.InitPos.y.ToString("F2") + " + " + initVel.y.ToString("F2") + " * t + 1/2 * g * t^2";
+            //case PlayerManagerScript.State.EDITING_DIR:
+            //    initVel = playerManager.InitForce * playerManager.MoveDir / playerManager.CurrItemMass;
+            //    text.text = "D.x = " + playerManager.InitPos.x.ToString("F2") + " + " + initVel.x.ToString("F2") + " * t <br>" +
+            //                "D.y = " + playerManager.InitPos.y.ToString("F2") + " + " + initVel.y.ToString("F2") + " * t + 1/2 * g * t^2";
 
-                break;
+            //    break;
 
             case PlayerManagerScript.State.THROWING:
                 timePassed = 0.0f;

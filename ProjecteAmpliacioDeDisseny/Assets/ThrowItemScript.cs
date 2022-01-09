@@ -6,6 +6,9 @@ public class ThrowItemScript : MonoBehaviour
 {
     private PlayerManagerScript manager;
     private Rigidbody rb;
+    private Collider col;
+    private PlayerManagerScript.State playerState = PlayerManagerScript.State.DEFAULT;
+
     public Rigidbody RB { get { return rb; } }
 
     // Start is called before the first frame update
@@ -13,6 +16,21 @@ public class ThrowItemScript : MonoBehaviour
     {
         manager = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
         rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
+        col.enabled = false;
+    }
+
+    private void Update()
+    {
+        if(playerState != manager.currState)
+        {
+            playerState = manager.currState;
+            if(playerState == PlayerManagerScript.State.THROWING)
+            {
+                col.enabled = true;
+            }
+        }
+
     }
 
 

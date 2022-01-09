@@ -8,7 +8,7 @@ public class PlayerManagerScript : MonoBehaviour
 {
     const float MINIMUM_FORCE = 1.0f;
 
-    public enum State { DEFAULT = 0, EDITING_ITEM, EDITING_POS, EDITING_FORCE, EDITING_DIR, THROWING, WAITING_FOR_THROW, THROW_DONE, COUNT }
+    public enum State { DEFAULT = 0, EDITING_ITEM, EDITING_POS, EDITING_FORCE, THROWING, WAITING_FOR_THROW, THROW_DONE, COUNT }
     public State currState = State.DEFAULT;
 
     public Vector2 initialPosIncrease = Vector2.zero;
@@ -31,7 +31,7 @@ public class PlayerManagerScript : MonoBehaviour
     ThrowItemScript currItem = null;
     public int currItemId = -1;
     Transform forceArrowsFather;
-    GameObject[] forceArrows;
+    //GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
     //InputsRecorder recorder;
     ValuesRecorder recorder;
@@ -41,10 +41,10 @@ public class PlayerManagerScript : MonoBehaviour
     
     Vector2 initPos;
     Vector2 initForce = Vector2.zero;
-    Vector2 moveDir = Vector2.zero;
+    //Vector2 moveDir = Vector2.zero;
     public Vector2 InitPos { get { return initPos; } }
     public Vector2 InitForce { get { return initForce; } }
-    public Vector2 MoveDir { get { return moveDir; } }
+    //public Vector2 MoveDir { get { return moveDir; } }
     public Vector2 CurrItemPos { get { return currItem.transform.position; } }
     public float CurrItemMass { get { return currItem.RB.mass; } }
 
@@ -67,30 +67,30 @@ public class PlayerManagerScript : MonoBehaviour
         //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         //initialPosSlider.maxValue = initalPosArray.Length - 1;
 
-        InitForceArrows();
+        //InitForceArrows();
 
         //ChangeCurrState(State.EDITING_POS);
         //ChangeCurrState(State.EDITING_ITEM);
     }
 
-    private void InitForceArrows()
-    {
-        forceArrowsFather = transform.GetChild(2).GetChild(0);
-        forceArrows = new GameObject[forceArrowsFather.childCount];
-        for (int i = 0; i < forceArrows.Length; i++)
-            forceArrows[i] = forceArrowsFather.GetChild(i).gameObject;
+    //private void InitForceArrows()
+    //{
+    //    forceArrowsFather = transform.GetChild(2).GetChild(0);
+    //    forceArrows = new GameObject[forceArrowsFather.childCount];
+    //    for (int i = 0; i < forceArrows.Length; i++)
+    //        forceArrows[i] = forceArrowsFather.GetChild(i).gameObject;
 
-        forceArrows[0].GetComponent<ForceArrowScript>().SetSlider(forceXSlider);
-        forceArrows[1].GetComponent<ForceArrowScript>().SetSlider(forceYSlider);
-    }
+    //    forceArrows[0].GetComponent<ForceArrowScript>().SetSlider(forceXSlider);
+    //    forceArrows[1].GetComponent<ForceArrowScript>().SetSlider(forceYSlider);
+    //}
 
     // Update is called once per frame
     void FixedUpdate()
     {
         StateMachine();
 
-        if ((int)currState >= (int)State.EDITING_DIR)
-            Debug.DrawRay(currItem.transform.position, moveDir, Color.red);
+        //if ((int)currState >= (int)State.EDITING_FORCE)
+        //    Debug.DrawRay(currItem.transform.position, moveDir, Color.red);
 
     }
 
@@ -114,67 +114,69 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.EDITING_POS:
                 //transform.position = initPos = GetInitialPos(); --> Ara el PlayerSet es mou al script DragPlayer
-                trajectoryScript.transform.position = forceArrowsFather.position = currItem.transform.position;
+                trajectoryScript.transform.position = currItem.transform.position;
 
                 break;
 
             case State.EDITING_FORCE:
                 initForce = GetInitialForce();
 
-                break;
-
-            case State.EDITING_DIR:
-                if (!recorder.IsPlaying)
-                {
-                    if (Input.GetKey(KeyCode.Mouse0) /*|| recorder.CurrFrameMousePressed*/)
-                    {
-                        Ray ray;
-                        //if (recorder.IsPlaying) ray = Camera.main.ScreenPointToRay(recorder.CurrFrameMousePosition);
-                        //else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                        RaycastHit hit;
-                        if (Physics.Raycast(ray, out hit))
-                        {
-                            if (!hit.transform.tag.Equals("NoClickAreas"))
-                            {
-                                //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-                                //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                                moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
-                            }
-
-                        }
-                        else
-                        {
-                            //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-                            //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                            moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
-                        }
-
-                    }
-
-                }
-                else
-                {
-                    //mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-                    //moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
-
-                    moveDir = recorder.CurrFrameMoveDirItem;
-                }
-
-                trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, moveDir, currItem.RB.mass);
+                trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, currItem.RB.mass);
 
                 break;
+
+            //case State.EDITING_DIR:
+            //    if (!recorder.IsPlaying)
+            //    {
+            //        if (Input.GetKey(KeyCode.Mouse0) /*|| recorder.CurrFrameMousePressed*/)
+            //        {
+            //            Ray ray;
+            //            //if (recorder.IsPlaying) ray = Camera.main.ScreenPointToRay(recorder.CurrFrameMousePosition);
+            //            //else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            //            RaycastHit hit;
+            //            if (Physics.Raycast(ray, out hit))
+            //            {
+            //                if (!hit.transform.tag.Equals("NoClickAreas"))
+            //                {
+            //                    //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+            //                    //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //                    mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //                    moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
+            //                }
+
+            //            }
+            //            else
+            //            {
+            //                //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+            //                //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //                moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
+            //            }
+
+            //        }
+
+            //    }
+            //    else
+            //    {
+            //        //mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
+            //        //moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
+
+            //        moveDir = recorder.CurrFrameMoveDirItem;
+            //    }
+
+                //trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, moveDir, currItem.RB.mass);
+
+                //break;
 
             case State.THROWING:
                 currItem.RB.isKinematic = false;
                 //Debug.Log("moveDir: " + moveDir);
                 //Debug.Log("initForce: " + initForce);
-                currItem.RB.AddForce(moveDir * initForce, ForceMode.Impulse);
+                currItem.RB.AddForce(initForce, ForceMode.Impulse);
 
                 NextState();
 
@@ -244,11 +246,11 @@ public class PlayerManagerScript : MonoBehaviour
         );
     }
 
-    private void ForceArrowsSetActive(bool _activate)
-    {
-        for (int i = 0; i < forceArrows.Length; i++)
-            forceArrows[i].SetActive(_activate);
-    }
+    //private void ForceArrowsSetActive(bool _activate)
+    //{
+    //    for (int i = 0; i < forceArrows.Length; i++)
+    //        forceArrows[i].SetActive(_activate);
+    //}
 
     private void EverythingSetActive(bool _activate)
     {
@@ -262,7 +264,7 @@ public class PlayerManagerScript : MonoBehaviour
         // Editing Force
         forceXSlider.gameObject.SetActive(_activate);
         forceYSlider.gameObject.SetActive(_activate);
-        ForceArrowsSetActive(_activate);
+        //ForceArrowsSetActive(_activate);
 
         // Editin Dir
         trajectoryScript.gameObject.SetActive(_activate);
@@ -300,14 +302,17 @@ public class PlayerManagerScript : MonoBehaviour
             case State.EDITING_FORCE:
                 forceXSlider.gameObject.SetActive(_activate);
                 forceYSlider.gameObject.SetActive(_activate);
-                ForceArrowsSetActive(_activate);
-
-                break;
-
-            case State.EDITING_DIR:
+                //ForceArrowsSetActive(_activate);
                 trajectoryScript.gameObject.SetActive(_activate);
+                if (_activate)
+                    trajectoryScript.SetData(currItem.GetComponent<MeshFilter>().mesh, currItem.GetComponent<MeshRenderer>().material, currItem.transform.localScale);
 
                 break;
+
+            //case State.EDITING_DIR:
+            //    trajectoryScript.gameObject.SetActive(_activate);
+
+            //    break;
 
             default:
                 break;
@@ -382,10 +387,10 @@ public class PlayerManagerScript : MonoBehaviour
     }
 
 
-    public Vector2 GetMoveDir()
-    {
-        return moveDir;
-    }
+    //public Vector2 GetMoveDir()
+    //{
+    //    return moveDir;
+    //}
     //public void SetMoveDir(Vector2 _moveDir)
     //{
     //    moveDir = _moveDir;
