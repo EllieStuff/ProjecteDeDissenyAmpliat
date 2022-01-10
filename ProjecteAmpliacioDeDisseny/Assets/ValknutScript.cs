@@ -5,6 +5,8 @@ using UnityEngine;
 public class ValknutScript : MonoBehaviour
 {
     internal int id;
+    internal Color initColor;
+    internal MeshRenderer meshRenderer;
 
     CollectiblesManager manager;
 
@@ -12,6 +14,7 @@ public class ValknutScript : MonoBehaviour
     void Start()
     {
         manager = GetComponentInParent<CollectiblesManager>();
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
 
@@ -20,7 +23,7 @@ public class ValknutScript : MonoBehaviour
         if (other.CompareTag("PlayerWeapon"))
         {
             if (!manager.recorder.IsPlaying) manager.AddValknaut(id);
-            gameObject.SetActive(false);
+            StartCoroutine(DestroyValknutCoroutine());
         }
 
     }
@@ -28,11 +31,30 @@ public class ValknutScript : MonoBehaviour
 
     internal void SetTextureAlpha(float _alpha)
     {
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         Material newMaterial = new Material(meshRenderer.material);
-        newMaterial.color = new Color(newMaterial.color.r, newMaterial.color.g, newMaterial.color.b, _alpha);
+        initColor = new Color(newMaterial.color.r, newMaterial.color.g, newMaterial.color.b, _alpha);
+        newMaterial.color = initColor;
 
         meshRenderer.material = newMaterial;
+    }
+
+
+    IEnumerator DestroyValknutCoroutine()
+    {
+        float destroyDelay = 0.05f;
+        float timer = 0.0f;
+        Color newColor = initColor;
+
+        while (timer < destroyDelay)
+        {
+            newColor.a = Mathf.Lerp(initColor.a, 0.1f, timer / destroyDelay);
+            meshRenderer.material.color = newColor;
+
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
+        }
+
+        gameObject.SetActive(false);
     }
 
 }

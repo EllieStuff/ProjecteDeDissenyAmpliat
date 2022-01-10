@@ -8,6 +8,8 @@ public class CollectiblesManager : MonoBehaviour
     const short FALSE = 0;
     const short TRUE = 1;
 
+    [SerializeField] float obtainedValknutAlpha = 0.3f;
+
     internal PlayerManagerScript playerManager;
     internal ValuesRecorder recorder;
 
@@ -48,7 +50,11 @@ public class CollectiblesManager : MonoBehaviour
             int valknautGot = PlayerPrefs.GetInt(levelValknautsKey + i.ToString(), FALSE);
             if (valknautGot == TRUE)
             {
-                valknuts[i].SetTextureAlpha(0.25f);
+                valknuts[i].SetTextureAlpha(obtainedValknutAlpha);
+            }
+            else
+            {
+                valknuts[i].SetTextureAlpha(1.0f);
             }
         }
 
@@ -67,6 +73,7 @@ public class CollectiblesManager : MonoBehaviour
         for(int i = 0; i < valknuts.Length; i++)
         {
             valknuts[i].gameObject.SetActive(true);
+            valknuts[i].meshRenderer.material.color = valknuts[i].initColor;
         }
 
     }
