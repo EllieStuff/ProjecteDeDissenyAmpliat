@@ -12,6 +12,7 @@ TagManager:
   - SceneObjects
   - PlayerWeapon
   - PlayerLocations
+  - CollectiblesManager
   layers:
   - Default
   - TransparentFX

@@ -26,6 +26,7 @@ public class PlayerManagerScript : MonoBehaviour
     public Slider forceXSlider;
     public Slider forceYSlider;
 
+    CollectiblesManager collectiblesManager;
     DragPlayer dragScript;
     Transform throwItemsFather;
     ThrowItemScript currItem = null;
@@ -54,6 +55,8 @@ public class PlayerManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
+
         throwItemsFather = transform.GetChild(0);
         //currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
 
@@ -338,6 +341,7 @@ public class PlayerManagerScript : MonoBehaviour
                 {
                     repetitionPlayed = true;
                     ReinitValues();
+                    collectiblesManager.RestartCollectibles();
                     currState = State.EDITING_ITEM;
                     GameObject _sceneObjects = GameObject.Find("SceneObjects");
                     _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(false);
