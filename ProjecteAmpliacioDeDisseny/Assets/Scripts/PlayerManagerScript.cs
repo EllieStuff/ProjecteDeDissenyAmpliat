@@ -21,6 +21,8 @@ public class PlayerManagerScript : MonoBehaviour
     public Slider forceXSlider;
     public Slider forceYSlider;
 
+    [SerializeField] GameObject replaySpeedButton;
+
     ChooseWeaponScript chooseWeaponScript;
     CollectiblesManager collectiblesManager;
     DragPlayer dragScript;
@@ -328,7 +330,10 @@ public class PlayerManagerScript : MonoBehaviour
                     repetitionPlayed = true;
                     ReinitValues();
                     collectiblesManager.RestartCollectibles();
+                    AudioManager.Play_OST("ThinkingMusic");
+                    replaySpeedButton.SetActive(true);
                     currState = State.EDITING_ITEM;
+                    forceXSlider.interactable = forceYSlider.interactable = false;
                     GameObject _sceneObjects = GameObject.Find("SceneObjects");
                     _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(false);
                     _sceneObjects.GetComponent<RestartSceneObjects>().RestoreSceneObjects();

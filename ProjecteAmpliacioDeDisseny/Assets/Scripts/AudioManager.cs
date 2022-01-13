@@ -35,7 +35,6 @@ public class AudioManager : MonoBehaviour
 
     public static void Play_OST(string _audioName)
     {
-        Debug.Log("in");
         AudioClip clip = Resources.Load<AudioClip>("Audio/OST/" + _audioName);
         if (clip == null) Debug.Log("fail");
         OST_AudioSource.clip = clip;
