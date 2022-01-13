@@ -16,29 +16,24 @@ public class PlayerManagerScript : MonoBehaviour
 
     //public string[] itemsToChoose;
     //public Slider chooseItemSlider;
-    public ChooseWeaponScript chooseWeaponScript;
+    public GameObject chooseWeaponGO;
     public ChoosePositionScript choosePositionScript;
-    public bool useInitialPosSlider = false;
-    public Vector2[] initalPosArray;
-    public Slider initialPosSlider;
-    public Slider initialXSlider;
-    public Slider initialYSlider;
     public Slider forceXSlider;
     public Slider forceYSlider;
 
+    [SerializeField] GameObject replaySpeedButton;
+    [SerializeField] GameObject changeStageButtons;
+
+    ChooseWeaponScript chooseWeaponScript;
     CollectiblesManager collectiblesManager;
     DragPlayer dragScript;
     Transform throwItemsFather;
     ThrowItemScript currItem = null;
     public int currItemId = -1;
-    Transform forceArrowsFather;
-    //GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
-    //InputsRecorder recorder;
     ValuesRecorder recorder;
     Vector2 realInitPos;
     Quaternion realInitRot;
-    Vector2 mousePos;
     
     Vector2 initPos;
     Vector2 initForce = Vector2.zero;
@@ -55,6 +50,8 @@ public class PlayerManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        chooseWeaponScript = chooseWeaponGO.GetComponentInChildren<ChooseWeaponScript>();
+
         collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
 
         throwItemsFather = transform.GetChild(0);
@@ -205,15 +202,22 @@ public class PlayerManagerScript : MonoBehaviour
 
     public void SetChosenItem()
     {
-        if(currItemId != chooseWeaponScript.CurrUsedIdx)
+        if(currItemId != chooseWeaponScript.currUsedIdx)
         {
-            currItemId = chooseWeaponScript.CurrUsedIdx;
+            if (recorder.IsRecording)
+                currItemId = chooseWeaponScript.currUsedIdx;
+            else if (recorder.IsPlaying)
+                chooseWeaponScript.currUsedIdx = currItemId;
 
             if (currItem != null)
                 currItem.gameObject.SetActive(false);
 
-            throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
-            currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
+            if (currItemId >= 0)
+            {
+                throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
+                currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
+            }
+
             //currItem.transform.position = initPos;
 
             //if (!recorder.IsPlaying)
@@ -224,21 +228,6 @@ public class PlayerManagerScript : MonoBehaviour
         }
 
 
-    }
-
-    Vector2 GetInitialPos()
-    {
-        if (useInitialPosSlider)
-        {
-            return initalPosArray[(int)initialPosSlider.value];
-        }
-        else
-        {
-            return new Vector2(
-                realInitPos.x + initialXSlider.value * initialPosIncrease.x,
-                realInitPos.y + initialYSlider.value * initialPosIncrease.y
-            );
-        }
     }
 
     private Vector2 GetInitialForce()
@@ -258,7 +247,7 @@ public class PlayerManagerScript : MonoBehaviour
     private void EverythingSetActive(bool _activate)
     {
         // Choosing Item
-        chooseWeaponScript.gameObject.SetActive(_activate);
+        chooseWeaponGO.SetActive(_activate);
 
         // Editing Pos
         dragScript.enabled = _activate;
@@ -292,7 +281,7 @@ public class PlayerManagerScript : MonoBehaviour
                 break;
 
             case State.EDITING_ITEM:
-                chooseWeaponScript.gameObject.SetActive(_activate);
+                chooseWeaponGO.SetActive(_activate);
 
                 break;
 
@@ -342,7 +331,10 @@ public class PlayerManagerScript : MonoBehaviour
                     repetitionPlayed = true;
                     ReinitValues();
                     collectiblesManager.RestartCollectibles();
+                    AudioManager.Play_OST("ThinkingMusic");
+                    replaySpeedButton.SetActive(true);
                     currState = State.EDITING_ITEM;
+                    forceXSlider.interactable = forceYSlider.interactable = false;
                     GameObject _sceneObjects = GameObject.Find("SceneObjects");
                     _sceneObjects.GetComponent<RestartSceneObjects>().manageGravity(false);
                     _sceneObjects.GetComponent<RestartSceneObjects>().RestoreSceneObjects();
@@ -353,6 +345,7 @@ public class PlayerManagerScript : MonoBehaviour
                 else
                 {
                     recorder.StopPlaying();
+                    changeStageButtons.SetActive(false);
                     GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
                     GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
                 }
@@ -386,6 +379,7 @@ public class PlayerManagerScript : MonoBehaviour
         currItem.RB.isKinematic = true;
         transform.position = realInitPos;
         transform.rotation = realInitRot;
+        currItemId = -1;
 
         EverythingSetActive(false);
     }

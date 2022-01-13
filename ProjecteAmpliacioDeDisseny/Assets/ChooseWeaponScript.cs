@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class ChooseWeaponScript : MonoBehaviour
 {
-    //internal bool refreshFlag = true;
+    public int currUsedIdx = -1;
 
     PlayerManagerScript playerManager;
     Transform[] weaponsList;
     Vector3[] weaponsPos;
-    int currDisabledIdx = -1;
-    public int CurrUsedIdx { get { return currDisabledIdx; } }
+    public Transform[] WeaponList { get { return weaponsList; } }
+    public int WeaponsAmount { get { return weaponsList.Length; } }
+    public Vector3[] WeaponsInitPos { get { return weaponsPos; } }
+
 
     // Start is called before the first frame update
     void Start()
@@ -59,16 +61,26 @@ public class ChooseWeaponScript : MonoBehaviour
     }
 
 
-    internal void ChangeDisabledItem(int _idx)
+    public void ChangeDisabledItem(int _idx)
     {
-        if (currDisabledIdx >= 0)
-            weaponsList[currDisabledIdx].gameObject.SetActive(true);
-        currDisabledIdx = _idx;
-        weaponsList[currDisabledIdx].gameObject.SetActive(false);
+        if (currUsedIdx >= 0)
+            weaponsList[currUsedIdx].gameObject.SetActive(true);
+        currUsedIdx = _idx;
+        weaponsList[currUsedIdx].gameObject.SetActive(false);
 
         RefreshWeaponsList();
-        // ToDo: Change Players Weapon
+    }
 
+    public Vector2[] GetWeaponsCurrentPos()
+    {
+        if (playerManager.currState != PlayerManagerScript.State.EDITING_ITEM)
+            return null;
+
+        Vector2[] posList = new Vector2[weaponsList.Length];
+        for (int i = 0; i < posList.Length; i++)
+            posList[i] = weaponsList[i].position;
+
+        return posList;
     }
 
 }
