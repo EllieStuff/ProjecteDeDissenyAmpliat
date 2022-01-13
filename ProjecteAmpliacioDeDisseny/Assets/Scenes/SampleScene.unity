@@ -5480,7 +5480,7 @@ GameObject:
   - component: {fileID: 1273414361}
   m_Layer: 0
   m_Name: Weapons To Choose
-  m_TagString: Untagged
+  m_TagString: Weaponry
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9189,7 +9189,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2076433687}
-  m_Mesh: {fileID: 7762398882814752820, guid: 13984505c1710c84b9c43f0c79a88fb4, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 263264777e51ead4ba2b1b797735fadf, type: 3}
 --- !u!1 &2077856440
 GameObject:
   m_ObjectHideFlags: 0

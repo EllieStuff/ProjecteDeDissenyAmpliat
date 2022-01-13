@@ -12,6 +12,10 @@ public class ChooseWeaponScript : MonoBehaviour
     Vector3[] weaponsPos;
     int currDisabledIdx = -1;
     public int CurrUsedIdx { get { return currDisabledIdx; } }
+    public Transform[] WeaponList { get { return weaponsList; } }
+    public int WeaponsAmount { get { return weaponsList.Length; } }
+    public Vector3[] WeaponsInitPos { get { return weaponsPos; } }
+
 
     // Start is called before the first frame update
     void Start()
@@ -59,7 +63,7 @@ public class ChooseWeaponScript : MonoBehaviour
     }
 
 
-    internal void ChangeDisabledItem(int _idx)
+    public void ChangeDisabledItem(int _idx)
     {
         if (currDisabledIdx >= 0)
             weaponsList[currDisabledIdx].gameObject.SetActive(true);
@@ -69,6 +73,15 @@ public class ChooseWeaponScript : MonoBehaviour
         RefreshWeaponsList();
         // ToDo: Change Players Weapon
 
+    }
+
+    public Vector2[] GetWeaponsCurrentPos()
+    {
+        Vector2[] posList = new Vector2[weaponsList.Length];
+        for (int i = 0; i < posList.Length; i++)
+            posList[i] = weaponsList[i].position;
+
+        return posList;
     }
 
 }

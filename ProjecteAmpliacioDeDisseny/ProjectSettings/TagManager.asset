@@ -13,6 +13,7 @@ TagManager:
   - PlayerWeapon
   - PlayerLocations
   - CollectiblesManager
+  - Weaponry
   layers:
   - Default
   - TransparentFX
