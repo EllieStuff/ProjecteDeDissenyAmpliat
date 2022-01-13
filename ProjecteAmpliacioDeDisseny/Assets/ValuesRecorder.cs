@@ -11,18 +11,22 @@ public class ValuesRecorder : MonoBehaviour
     [SerializeField] int targetFrameRate = 30;
     
     PlayerManagerScript playerScript;
+    ChooseWeaponScript chooseItemsScript;
+    //bool lastChooseItemsTouchingPlayer = false;
+    //Vector2[] initChooseItemsPos;
 
     class SavedData
     {
-        public int 
-            chooseItemId,
-            initPosSliderInt = 0;
+        public int
+            //chooseItemId,
+            choosenItemId;
         public Vector2
-            initPosSlider = Vector2.zero,
-            initForceSlider;
+            initPos = Vector2.zero,
+            initForce;
+        public Vector2[] chooseItems;
         public ButtonsState buttonState;
-        public SavedData(int _chooseItemId, /*int _initPosSliderInt, Vector2 _initPosSlider,*/ Vector2 _initForceSlider, ButtonsState _buttonsState = ButtonsState.NULL) 
-            { chooseItemId = _chooseItemId; /*initPosSliderInt = _initPosSliderInt; initPosSlider = _initPosSlider;*/ initForceSlider = _initForceSlider; buttonState = _buttonsState; }
+        public SavedData(/*int _chooseItemsId, */int _choosenItemId, Vector2 _initPos, Vector2 _initForce, Vector2[] _chooseItems, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { /*chooseItemId = _chooseItemsId; */choosenItemId = _choosenItemId; initPos = _initPos; initForce = _initForce; chooseItems = _chooseItems; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
@@ -30,8 +34,8 @@ public class ValuesRecorder : MonoBehaviour
     public bool IsWorking { get { return recorderState != RecorderState.OFF; } }
     public bool IsRecording { get { return recorderState == RecorderState.RECORDING; } }
     public bool IsPlaying { get { return recorderState == RecorderState.PLAYING; } }
-    public Vector2 CurrFrameInitPosSlider { get { return savedData[savedData.Count - 1].initPosSlider; } }
-    public Vector2 CurrFrameInitForceSlider { get { return savedData[savedData.Count - 1].initForceSlider; } }
+    public Vector2 CurrFrameInitPos { get { return savedData[savedData.Count - 1].initPos; } }
+    public Vector2 CurrFrameInitForce { get { return savedData[savedData.Count - 1].initForce; } }
 
 
     private void Start()
@@ -39,6 +43,11 @@ public class ValuesRecorder : MonoBehaviour
         Application.targetFrameRate = targetFrameRate;
 
         playerScript = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
+
+        chooseItemsScript = GameObject.FindGameObjectWithTag("Weaponry").GetComponent<ChooseWeaponScript>();
+        //initChooseItemsPos = new Vector2[chooseItemsScript.WeaponsAmount];
+        //for(int i = 0; i < chooseItemsScript.WeaponsAmount; i++)
+        //    initChooseItemsPos[i] = chooseItemsScript.WeaponsInitPos[i];
 
         StartRecording();
     }
@@ -55,17 +64,15 @@ public class ValuesRecorder : MonoBehaviour
 
             case RecorderState.RECORDING:
                 savedData.Insert(0, new SavedData(
+                        //chooseItemsScript.CurrUsedIdx, 
                         playerScript.currItemId,
-                        //(int)playerScript.initialPosSlider.value,
-                        //new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value), 
-                        new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value)
+                        playerScript.transform.position,
+                        new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value),
+                        chooseItemsScript.GetWeaponsCurrentPos()
                     )
                 );
 
-                if (playerScript.useInitialPosSlider)
-                    savedData[0].initPosSliderInt = (int)playerScript.initialPosSlider.value;
-                else
-                    savedData[0].initPosSlider = new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value);
+                //savedData[0].initPos = new Vector2(playerScript.initialXSlider.value, playerScript.initialYSlider.value);
 
                 //mouseData.Add(new MouseData(Input.mousePosition, inputModule.IsPressed, inputModule.IsReleased));
                 //if (framesRecorded < INT_CAPACITY)
@@ -74,43 +81,60 @@ public class ValuesRecorder : MonoBehaviour
                 break;
 
             case RecorderState.PLAYING:
+                // ToDo:
+                //  - Adaptar les noves variables aqui
+                //  - Fer que funcionin diferents les noves variables en els altres Scripts en "Playing"
+
                 if (savedData.Count > 0)
                 {
                     int idx = savedData.Count - 1;
-                    playerScript.currItemId = savedData[idx].chooseItemId;
-                    if (playerScript.useInitialPosSlider) {
-                        playerScript.initialPosSlider.value = savedData[idx].initPosSliderInt;
-                    } else {
-                        playerScript.initialXSlider.value = savedData[idx].initPosSlider.x;
-                        playerScript.initialYSlider.value = savedData[idx].initPosSlider.y;
-                    }
-                    playerScript.forceXSlider.value = savedData[idx].initForceSlider.x;
-                    playerScript.forceYSlider.value = savedData[idx].initForceSlider.y;
+                    playerScript.currItemId = savedData[idx].choosenItemId;
+
+                    playerScript.transform.position = savedData[idx].initPos;
+                    //playerScript.initialXSlider.value = savedData[idx].initPos.x;
+                    //playerScript.initialYSlider.value = savedData[idx].initPos.y;
+
+                    playerScript.forceXSlider.value = savedData[idx].initForce.x;
+                    playerScript.forceYSlider.value = savedData[idx].initForce.y;
                     //playerScript.SetMoveDir(savedData[idx].movePointItem);
+
+                    if (playerScript.currState == PlayerManagerScript.State.EDITING_ITEM)
+                    {
+                        for (int i = 0; i < chooseItemsScript.WeaponsAmount; i++)
+                        {
+                            chooseItemsScript.WeaponList[i].position = savedData[idx].chooseItems[i];
+
+                            if (savedData[idx].choosenItemId == i)
+                            {
+                                chooseItemsScript.WeaponList[i].gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                if (!chooseItemsScript.WeaponList[i].gameObject.activeSelf)
+                                    chooseItemsScript.WeaponList[i].gameObject.SetActive(true);
+                            }
+
+                        }
+                    }
+
+
+                    // Creo que le he dado demasiadas vueltas y ni hace falta esto (???
+                    //int currItemIdx = savedData[idx].chooseItemId;
+                    //Vector2 currItemPos = chooseItemsScript.WeaponList[currItemIdx].position;
+                    //if (currItemPos == initChooseItemsPos[currItemIdx] && lastChooseItemsTouchingPlayer) { }
+                        
+                    //initChooseItemsPos[currItemIdx] = chooseItemsScript.WeaponList[currItemIdx].position;
+                    //lastChooseItemsTouchingPlayer = chooseItemsScript.TouchingPlayer;
+
                     ApplyFrameButtonStateEffect();
 
                     savedData.RemoveAt(idx);
 
-
-                    //SavedData tmpMouseData = savedData[savedData.Count - 1];
-                    //inputModule.SetMouseState(tmpMouseData.position, tmpMouseData.pressed, tmpMouseData.released);
-                    //savedData.RemoveAt(savedData.Count - 1);
                 }
                 else
                 {
                     StopPlaying();
                 }
-
-                //inputModule.enabled = true;
-                //inputModule.SetMouseState(mouseData[framePlaying].position, mouseData[framePlaying].pressed, mouseData[framePlaying].released);
-                //Debug.Log("mouseClicked: " + mouseData[framePlaying]);
-                //if (framePlaying < framesRecorded - 1)
-                //    framePlaying++;
-                //else
-                //    StopPlaying();
-
-                //inputModule.enabled = false;
-
 
                 break;
 
