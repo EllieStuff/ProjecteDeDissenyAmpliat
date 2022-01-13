@@ -12,21 +12,21 @@ public class ValuesRecorder : MonoBehaviour
     
     PlayerManagerScript playerScript;
     ChooseWeaponScript chooseItemsScript;
-    bool[] lastChooseItemsTriggeringPlayer;
-    Vector2[] initChooseItemsPos;
+    //bool lastChooseItemsTouchingPlayer = false;
+    //Vector2[] initChooseItemsPos;
 
     class SavedData
     {
         public int
-            chooseItemId,
+            //chooseItemId,
             choosenItemId;
         public Vector2
             initPos = Vector2.zero,
             initForce;
         public Vector2[] chooseItems;
         public ButtonsState buttonState;
-        public SavedData(int _chooseItemsId, int _choosenItemId, Vector2 _initPos, Vector2 _initForce, Vector2[] _chooseItems, ButtonsState _buttonsState = ButtonsState.NULL) 
-            { chooseItemId = _chooseItemsId; choosenItemId = _choosenItemId; initPos = _initPos; initForce = _initForce; chooseItems = _chooseItems; buttonState = _buttonsState; }
+        public SavedData(/*int _chooseItemsId, */int _choosenItemId, Vector2 _initPos, Vector2 _initForce, Vector2[] _chooseItems, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { /*chooseItemId = _chooseItemsId; */choosenItemId = _choosenItemId; initPos = _initPos; initForce = _initForce; chooseItems = _chooseItems; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
@@ -45,13 +45,9 @@ public class ValuesRecorder : MonoBehaviour
         playerScript = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
 
         chooseItemsScript = GameObject.FindGameObjectWithTag("Weaponry").GetComponent<ChooseWeaponScript>();
-        lastChooseItemsTriggeringPlayer = new bool[chooseItemsScript.WeaponsAmount];
-        initChooseItemsPos = new Vector2[chooseItemsScript.WeaponsAmount];
-        for(int i = 0; i < chooseItemsScript.WeaponsAmount; i++)
-        {
-            lastChooseItemsTriggeringPlayer[i] = false;
-            initChooseItemsPos[i] = chooseItemsScript.WeaponsInitPos[i];
-        }
+        //initChooseItemsPos = new Vector2[chooseItemsScript.WeaponsAmount];
+        //for(int i = 0; i < chooseItemsScript.WeaponsAmount; i++)
+        //    initChooseItemsPos[i] = chooseItemsScript.WeaponsInitPos[i];
 
         StartRecording();
     }
@@ -68,7 +64,8 @@ public class ValuesRecorder : MonoBehaviour
 
             case RecorderState.RECORDING:
                 savedData.Insert(0, new SavedData(
-                        chooseItemsScript.CurrUsedIdx, playerScript.currItemId,
+                        //chooseItemsScript.CurrUsedIdx, 
+                        playerScript.currItemId,
                         playerScript.transform.position,
                         new Vector2(playerScript.forceXSlider.value, playerScript.forceYSlider.value),
                         chooseItemsScript.GetWeaponsCurrentPos()
@@ -93,36 +90,51 @@ public class ValuesRecorder : MonoBehaviour
                     int idx = savedData.Count - 1;
                     playerScript.currItemId = savedData[idx].choosenItemId;
 
-                    playerScript.initialXSlider.value = savedData[idx].initPos.x;
-                    playerScript.initialYSlider.value = savedData[idx].initPos.y;
+                    playerScript.transform.position = savedData[idx].initPos;
+                    //playerScript.initialXSlider.value = savedData[idx].initPos.x;
+                    //playerScript.initialYSlider.value = savedData[idx].initPos.y;
 
                     playerScript.forceXSlider.value = savedData[idx].initForce.x;
                     playerScript.forceYSlider.value = savedData[idx].initForce.y;
                     //playerScript.SetMoveDir(savedData[idx].movePointItem);
+
+                    if (playerScript.currState == PlayerManagerScript.State.EDITING_ITEM)
+                    {
+                        for (int i = 0; i < chooseItemsScript.WeaponsAmount; i++)
+                        {
+                            chooseItemsScript.WeaponList[i].position = savedData[idx].chooseItems[i];
+
+                            if (savedData[idx].choosenItemId == i)
+                            {
+                                chooseItemsScript.WeaponList[i].gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                if (!chooseItemsScript.WeaponList[i].gameObject.activeSelf)
+                                    chooseItemsScript.WeaponList[i].gameObject.SetActive(true);
+                            }
+
+                        }
+                    }
+
+
+                    // Creo que le he dado demasiadas vueltas y ni hace falta esto (???
+                    //int currItemIdx = savedData[idx].chooseItemId;
+                    //Vector2 currItemPos = chooseItemsScript.WeaponList[currItemIdx].position;
+                    //if (currItemPos == initChooseItemsPos[currItemIdx] && lastChooseItemsTouchingPlayer) { }
+                        
+                    //initChooseItemsPos[currItemIdx] = chooseItemsScript.WeaponList[currItemIdx].position;
+                    //lastChooseItemsTouchingPlayer = chooseItemsScript.TouchingPlayer;
+
                     ApplyFrameButtonStateEffect();
 
                     savedData.RemoveAt(idx);
 
-
-                    //SavedData tmpMouseData = savedData[savedData.Count - 1];
-                    //inputModule.SetMouseState(tmpMouseData.position, tmpMouseData.pressed, tmpMouseData.released);
-                    //savedData.RemoveAt(savedData.Count - 1);
                 }
                 else
                 {
                     StopPlaying();
                 }
-
-                //inputModule.enabled = true;
-                //inputModule.SetMouseState(mouseData[framePlaying].position, mouseData[framePlaying].pressed, mouseData[framePlaying].released);
-                //Debug.Log("mouseClicked: " + mouseData[framePlaying]);
-                //if (framePlaying < framesRecorded - 1)
-                //    framePlaying++;
-                //else
-                //    StopPlaying();
-
-                //inputModule.enabled = false;
-
 
                 break;
 

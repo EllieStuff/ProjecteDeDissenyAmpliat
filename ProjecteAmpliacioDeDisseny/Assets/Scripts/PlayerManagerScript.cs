@@ -205,15 +205,22 @@ public class PlayerManagerScript : MonoBehaviour
 
     public void SetChosenItem()
     {
-        if(currItemId != chooseWeaponScript.CurrUsedIdx)
+        if(currItemId != chooseWeaponScript.currUsedIdx)
         {
-            currItemId = chooseWeaponScript.CurrUsedIdx;
+            if (recorder.IsRecording)
+                currItemId = chooseWeaponScript.currUsedIdx;
+            else if (recorder.IsPlaying)
+                chooseWeaponScript.currUsedIdx = currItemId;
 
             if (currItem != null)
                 currItem.gameObject.SetActive(false);
 
-            throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
-            currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
+            if (currItemId >= 0)
+            {
+                throwItemsFather.GetChild(currItemId).gameObject.SetActive(true);
+                currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
+            }
+
             //currItem.transform.position = initPos;
 
             //if (!recorder.IsPlaying)
@@ -386,6 +393,7 @@ public class PlayerManagerScript : MonoBehaviour
         currItem.RB.isKinematic = true;
         transform.position = realInitPos;
         transform.rotation = realInitRot;
+        currItemId = -1;
 
         EverythingSetActive(false);
     }

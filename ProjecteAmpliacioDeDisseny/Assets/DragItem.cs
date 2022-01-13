@@ -5,9 +5,9 @@ using UnityEngine;
 public class DragItem : MonoBehaviour
 {
     internal int id;
+    internal bool touchingPlayer = false;
 
     ChooseWeaponScript manager;
-    bool touchingPlayer = false;
 
 
     // Start is called before the first frame update
@@ -16,11 +16,6 @@ public class DragItem : MonoBehaviour
         manager = GetComponentInParent<ChooseWeaponScript>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnMouseDrag()
     {
