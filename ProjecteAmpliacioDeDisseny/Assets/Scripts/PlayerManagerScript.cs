@@ -16,29 +16,21 @@ public class PlayerManagerScript : MonoBehaviour
 
     //public string[] itemsToChoose;
     //public Slider chooseItemSlider;
-    public ChooseWeaponScript chooseWeaponScript;
+    public GameObject chooseWeaponGO;
     public ChoosePositionScript choosePositionScript;
-    public bool useInitialPosSlider = false;
-    public Vector2[] initalPosArray;
-    public Slider initialPosSlider;
-    public Slider initialXSlider;
-    public Slider initialYSlider;
     public Slider forceXSlider;
     public Slider forceYSlider;
 
+    ChooseWeaponScript chooseWeaponScript;
     CollectiblesManager collectiblesManager;
     DragPlayer dragScript;
     Transform throwItemsFather;
     ThrowItemScript currItem = null;
     public int currItemId = -1;
-    Transform forceArrowsFather;
-    //GameObject[] forceArrows;
     TrajectoryCalculator trajectoryScript;
-    //InputsRecorder recorder;
     ValuesRecorder recorder;
     Vector2 realInitPos;
     Quaternion realInitRot;
-    Vector2 mousePos;
     
     Vector2 initPos;
     Vector2 initForce = Vector2.zero;
@@ -55,6 +47,8 @@ public class PlayerManagerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        chooseWeaponScript = chooseWeaponGO.GetComponentInChildren<ChooseWeaponScript>();
+
         collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
 
         throwItemsFather = transform.GetChild(0);
@@ -233,21 +227,6 @@ public class PlayerManagerScript : MonoBehaviour
 
     }
 
-    Vector2 GetInitialPos()
-    {
-        if (useInitialPosSlider)
-        {
-            return initalPosArray[(int)initialPosSlider.value];
-        }
-        else
-        {
-            return new Vector2(
-                realInitPos.x + initialXSlider.value * initialPosIncrease.x,
-                realInitPos.y + initialYSlider.value * initialPosIncrease.y
-            );
-        }
-    }
-
     private Vector2 GetInitialForce()
     {
         return new Vector2(
@@ -265,7 +244,7 @@ public class PlayerManagerScript : MonoBehaviour
     private void EverythingSetActive(bool _activate)
     {
         // Choosing Item
-        chooseWeaponScript.gameObject.SetActive(_activate);
+        chooseWeaponGO.SetActive(_activate);
 
         // Editing Pos
         dragScript.enabled = _activate;
@@ -299,7 +278,7 @@ public class PlayerManagerScript : MonoBehaviour
                 break;
 
             case State.EDITING_ITEM:
-                chooseWeaponScript.gameObject.SetActive(_activate);
+                chooseWeaponGO.SetActive(_activate);
 
                 break;
 
