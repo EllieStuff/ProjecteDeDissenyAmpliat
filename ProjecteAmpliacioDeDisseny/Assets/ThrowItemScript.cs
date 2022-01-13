@@ -11,7 +11,6 @@ public class ThrowItemScript : MonoBehaviour
     private bool timeOfGrace = true;
     private Vector2 lastPos = Vector2.zero;
     private bool firstIt = true;
-    //private PlayerManagerScript.State playerState = PlayerManagerScript.State.DEFAULT;
 
     public Rigidbody RB { get { return rb; } }
 
@@ -77,7 +76,6 @@ public class ThrowItemScript : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         timeOfGrace = false;
-        // ToDo: fer que tambe es reinici en X segons mes si no ha acabat encara 
 
         yield return new WaitForSeconds(15.0f);
         if (firstIt)
