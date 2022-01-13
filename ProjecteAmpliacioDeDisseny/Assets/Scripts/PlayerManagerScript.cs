@@ -22,6 +22,7 @@ public class PlayerManagerScript : MonoBehaviour
     public Slider forceYSlider;
 
     [SerializeField] GameObject replaySpeedButton;
+    [SerializeField] GameObject changeStageButtons;
 
     ChooseWeaponScript chooseWeaponScript;
     CollectiblesManager collectiblesManager;
@@ -344,6 +345,7 @@ public class PlayerManagerScript : MonoBehaviour
                 else
                 {
                     recorder.StopPlaying();
+                    changeStageButtons.SetActive(false);
                     GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
                     GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
                 }
