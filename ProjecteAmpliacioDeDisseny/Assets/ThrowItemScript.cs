@@ -78,6 +78,14 @@ public class ThrowItemScript : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         timeOfGrace = false;
         // ToDo: fer que tambe es reinici en X segons mes si no ha acabat encara 
+
+        yield return new WaitForSeconds(15.0f);
+        if (firstIt)
+        {
+            FinishState();
+            yield return new WaitForSeconds(20.0f);
+            FinishState();
+        }
     }
 
 }
