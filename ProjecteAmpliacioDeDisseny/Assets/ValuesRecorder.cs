@@ -9,6 +9,7 @@ public class ValuesRecorder : MonoBehaviour
 
     [SerializeField] RecorderState recorderState = RecorderState.OFF;
     [SerializeField] int targetFrameRate = 30;
+    public float initReplayTimeScale = 0.5f;
     
     PlayerManagerScript playerScript;
     ChooseWeaponScript chooseItemsScript;
@@ -167,28 +168,18 @@ public class ValuesRecorder : MonoBehaviour
     [ContextMenu("StartPlaying")]
     public void StartPlaying()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 0.5f;
-        //inputModule.enabled = false;
-        //framePlaying = 0;
+        Time.timeScale = initReplayTimeScale;
         recorderState = RecorderState.PLAYING;
     }
     [ContextMenu("ReStartPlaying")]
     public void ReStartPlaying()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        //inputModule.enabled = false;
         recorderState = RecorderState.PLAYING;
     }
     [ContextMenu("StopPlaying")]
     public void StopPlaying()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 1.0f;
-        //inputModule.enabled = true;
         recorderState = RecorderState.OFF;
     }
 
