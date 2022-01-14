@@ -16,9 +16,11 @@ public class DragPlayer : MonoBehaviour
     {
         transform.position = currPlayerLocation = initPlayerLocation.GetChild(0).position;
     }
-    private void Start()
+
+
+    private void OnMouseDown()
     {
-        
+        AudioManager.Play_SFX("PickUpItem_SFX");
     }
 
     private void OnMouseDrag()
@@ -43,6 +45,7 @@ public class DragPlayer : MonoBehaviour
             transform.position = currPlayerLocation;
         }
 
+        AudioManager.Play_SFX("LetDownItem_SFX");
     }
 
     private void OnTriggerEnter(Collider other)

@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     
     private static AudioSource SFX_AudioSource;
     private static AudioSource OST_AudioSource;
+    private static ValuesRecorder recorder;
 
 
     public void Start()
@@ -19,6 +20,7 @@ public class AudioManager : MonoBehaviour
 
         SFX_Volume = PlayerPrefs.GetFloat("sfxVolume", SFX_Volume);
         OST_Volume = PlayerPrefs.GetFloat("ostVolume", OST_Volume);
+        recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
 
         SFX_AudioSource.volume = SFX_Volume;
         OST_AudioSource.volume = OST_Volume;
@@ -33,14 +35,21 @@ public class AudioManager : MonoBehaviour
         SoundData clipData = Resources.Load<GameObject>("Audio/SFX/" + _audioName).GetComponent<SoundData>();
         SFX_AudioSource.volume = clipData.volume;
         SFX_AudioSource.pitch = clipData.pitch;
+
+        recorder.SetFrameSFX(_audioName);
+
         SFX_AudioSource.PlayOneShot(clipData.clip);
     }
 
     public static void Play_OST(string _audioName)
     {
-        AudioClip clip = Resources.Load<AudioClip>("Audio/OST/" + _audioName);
-        if (clip == null) Debug.Log("fail");
-        OST_AudioSource.clip = clip;
+        SoundData clipData = Resources.Load<GameObject>("Audio/OST/" + _audioName).GetComponent<SoundData>();
+        OST_AudioSource.volume = clipData.volume;
+        OST_AudioSource.pitch = clipData.pitch;
+
+        recorder.SetFrameOST(_audioName);
+
+        OST_AudioSource.clip = clipData.clip;
         OST_AudioSource.Play();
     }
 
