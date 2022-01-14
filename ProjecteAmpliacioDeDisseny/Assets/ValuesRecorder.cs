@@ -13,8 +13,6 @@ public class ValuesRecorder : MonoBehaviour
     
     PlayerManagerScript playerScript;
     ChooseWeaponScript chooseItemsScript;
-    //bool lastChooseItemsTouchingPlayer = false;
-    //Vector2[] initChooseItemsPos;
 
     class SavedData
     {
@@ -26,8 +24,11 @@ public class ValuesRecorder : MonoBehaviour
             initForce;
         public Vector2[] chooseItems;
         public ButtonsState buttonState;
-        public SavedData(/*int _chooseItemsId, */int _choosenItemId, Vector2 _initPos, Vector2 _initForce, Vector2[] _chooseItems, ButtonsState _buttonsState = ButtonsState.NULL) 
-            { /*chooseItemId = _chooseItemsId; */choosenItemId = _choosenItemId; initPos = _initPos; initForce = _initForce; chooseItems = _chooseItems; buttonState = _buttonsState; }
+        public string
+            ostToPlay = null,
+            sfxToPlay = null;
+        public SavedData(int _choosenItemId, Vector2 _initPos, Vector2 _initForce, Vector2[] _chooseItems, ButtonsState _buttonsState = ButtonsState.NULL) 
+            { choosenItemId = _choosenItemId; initPos = _initPos; initForce = _initForce; chooseItems = _chooseItems; buttonState = _buttonsState; }
     }
     List<SavedData> savedData = new List<SavedData>();
 
@@ -118,12 +119,15 @@ public class ValuesRecorder : MonoBehaviour
                         }
                     }
 
+                    if (savedData[idx].sfxToPlay != null) AudioManager.Play_SFX(savedData[idx].sfxToPlay);
+                    if (savedData[idx].ostToPlay != null) AudioManager.Play_OST(savedData[idx].ostToPlay);
+
 
                     // Creo que le he dado demasiadas vueltas y ni hace falta esto (???
                     //int currItemIdx = savedData[idx].chooseItemId;
                     //Vector2 currItemPos = chooseItemsScript.WeaponList[currItemIdx].position;
                     //if (currItemPos == initChooseItemsPos[currItemIdx] && lastChooseItemsTouchingPlayer) { }
-                        
+
                     //initChooseItemsPos[currItemIdx] = chooseItemsScript.WeaponList[currItemIdx].position;
                     //lastChooseItemsTouchingPlayer = chooseItemsScript.TouchingPlayer;
 
@@ -215,5 +219,15 @@ public class ValuesRecorder : MonoBehaviour
 
     }
 
+    public void SetFrameSFX(string _sfxName)
+    {
+        if (savedData.Count > 0)
+            savedData[0].sfxToPlay = _sfxName;
+    }
+    public void SetFrameOST(string _ostName)
+    {
+        if (savedData.Count > 0)
+            savedData[0].ostToPlay = _ostName;
+    }
 
 }

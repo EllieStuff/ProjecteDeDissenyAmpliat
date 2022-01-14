@@ -17,6 +17,11 @@ public class DragItem : MonoBehaviour
     }
 
 
+    private void OnMouseDown()
+    {
+        AudioManager.Play_SFX("PickUpItem_SFX");
+    }
+
     private void OnMouseDrag()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -36,6 +41,7 @@ public class DragItem : MonoBehaviour
             manager.RefreshWeaponsList();
         }
 
+        AudioManager.Play_SFX("LetDownItem_SFX");
     }
 
     private void OnTriggerEnter(Collider other)
