@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -29,8 +30,10 @@ public class AudioManager : MonoBehaviour
 
     public static void Play_SFX(string _audioName)
     {
-        AudioClip clip = Resources.Load<AudioClip>("Audio/SFX/" + _audioName);
-        SFX_AudioSource.PlayOneShot(clip);
+        SoundData clipData = Resources.Load<GameObject>("Audio/SFX/" + _audioName).GetComponent<SoundData>();
+        SFX_AudioSource.volume = clipData.volume;
+        SFX_AudioSource.pitch = clipData.pitch;
+        SFX_AudioSource.PlayOneShot(clipData.clip);
     }
 
     public static void Play_OST(string _audioName)

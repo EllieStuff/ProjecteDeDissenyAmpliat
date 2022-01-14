@@ -23,6 +23,7 @@ public class ValknutScript : MonoBehaviour
         if (other.CompareTag("PlayerWeapon"))
         {
             if (!manager.recorder.IsPlaying) manager.AddValknaut(id);
+            AudioManager.Play_SFX("CoinsSFX");
             StartCoroutine(DestroyValknutCoroutine());
         }
 
