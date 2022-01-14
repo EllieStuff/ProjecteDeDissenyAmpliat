@@ -40,9 +40,6 @@ public class ThrowItemScript : MonoBehaviour
                 FinishState();
 
             lastPos = transform.position;
-
-            Debug.Log("LastPos Distance: " + lastPos2TargetDistance);
-            Debug.Log("CurrPos Distance: " + currPos2TargetDistance);
         }
 
     }
