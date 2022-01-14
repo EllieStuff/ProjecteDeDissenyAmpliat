@@ -18,6 +18,12 @@ public class ForceSliderScript : MonoBehaviour
         slider = GetComponent<Slider>();
         sliderFillColor = fillImage.color;
         sliderHandle2Color = handle2Image.color;
+
+        sliderFillColor.a = Mathf.Lerp(0.2f, 1.0f, slider.value);
+        fillImage.color = sliderFillColor;
+
+        sliderHandle2Color.a = Mathf.Lerp(0.2f, 1.0f, slider.value);
+        handle2Image.color = sliderHandle2Color;
     }
 
     // Update is called once per frame
