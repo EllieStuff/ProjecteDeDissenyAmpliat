@@ -32,7 +32,14 @@ public class AudioManager : MonoBehaviour
 
     public static void Play_SFX(string _audioName)
     {
-        SoundData clipData = Resources.Load<GameObject>("Audio/SFX/" + _audioName).GetComponent<SoundData>();
+        GameObject loadObject = Resources.Load<GameObject>("Audio/SFX/" + _audioName);
+        if (loadObject == null)
+        {
+            Debug.LogError("Audio " + _audioName + " not found");
+            return;
+        }
+
+        SoundData clipData = loadObject.GetComponent<SoundData>();
         SFX_AudioSource.volume = clipData.volume;
         SFX_AudioSource.pitch = clipData.pitch;
 
@@ -43,7 +50,14 @@ public class AudioManager : MonoBehaviour
 
     public static void Play_OST(string _audioName)
     {
-        SoundData clipData = Resources.Load<GameObject>("Audio/OST/" + _audioName).GetComponent<SoundData>();
+        GameObject loadObject = Resources.Load<GameObject>("Audio/OST/" + _audioName);
+        if (loadObject == null)
+        {
+            Debug.LogError("Audio " + _audioName + " not found");
+            return;
+        }
+
+        SoundData clipData = loadObject.GetComponent<SoundData>();
         OST_AudioSource.volume = clipData.volume;
         OST_AudioSource.pitch = clipData.pitch;
 
