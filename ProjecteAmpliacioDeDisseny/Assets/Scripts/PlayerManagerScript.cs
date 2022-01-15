@@ -11,6 +11,8 @@ public class PlayerManagerScript : MonoBehaviour
     public enum State { DEFAULT = 0, EDITING_ITEM, EDITING_POS, EDITING_FORCE, THROWING, WAITING_FOR_THROW, THROW_DONE, COUNT }
     public State currState = State.DEFAULT;
 
+    public bool isThrowDone = false;
+
     public Vector2 initialPosIncrease = Vector2.zero;
     public Vector2 initialForceIncrease = Vector2.zero;
 
@@ -184,7 +186,7 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.WAITING_FOR_THROW:
                 // Interact On Collision
-
+                isThrowDone = true;
                 break;
 
             case State.THROW_DONE:
