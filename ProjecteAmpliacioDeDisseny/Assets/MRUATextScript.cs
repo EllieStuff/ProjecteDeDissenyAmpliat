@@ -22,6 +22,8 @@ public class MRUATextScript : MonoBehaviour
     private Vector2 minLine = new Vector2(-44, -42);
     private Vector2 maxLine = new Vector2(44, 42);
 
+    private RewindPostProcessController rewinder;
+
 
     Vector2 initVel;
     float timePassed = 0.0f;
@@ -46,6 +48,8 @@ public class MRUATextScript : MonoBehaviour
 
         hPos = GameObject.Find("Horizontal Position").transform.GetChild(0).GetComponent<RectTransform>();
         vPos = GameObject.Find("Vertical Position").transform.GetChild(0).GetComponent<RectTransform>();
+
+        rewinder = GameObject.Find("Global Volume").GetComponent<RewindPostProcessController>();
     }
 
     // Update is called once per frame
@@ -79,6 +83,8 @@ public class MRUATextScript : MonoBehaviour
 
                     hPos.transform.parent.gameObject.SetActive(false);
                     vPos.transform.parent.gameObject.SetActive(false);
+
+                    rewinder.playAnimation = true;
 
                     playerManager.isThrowDone = false;
                 }
