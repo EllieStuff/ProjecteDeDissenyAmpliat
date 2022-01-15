@@ -12,6 +12,9 @@ public class ThrowItemScript : MonoBehaviour
     private Vector2 lastPos = Vector2.zero;
     private bool firstIt = true;
 
+    public bool canRotate = false;
+    public Vector3 rotationSpeed = new Vector3(0.0001f, 0.0001f, 0);
+
     public Rigidbody RB { get { return rb; } }
 
     // Start is called before the first frame update
@@ -30,6 +33,8 @@ public class ThrowItemScript : MonoBehaviour
         {
             collider.enabled = true;
             StartCoroutine(TimeOfGrace());
+
+            canRotate = true;
         }
         else if (manager.currState == PlayerManagerScript.State.WAITING_FOR_THROW)
         {
@@ -40,6 +45,12 @@ public class ThrowItemScript : MonoBehaviour
                 FinishState();
 
             lastPos = transform.position;
+
+            if (canRotate)
+            {
+                transform.Rotate(rotationSpeed, Space.Self);
+            }
+            
         }
 
     }
