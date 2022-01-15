@@ -24,6 +24,7 @@ public class MRUATextScript : MonoBehaviour
 
     private RewindPostProcessController rewinder;
 
+    private bool isFirstTime = true;
 
     Vector2 initVel;
     float timePassed = 0.0f;
@@ -61,9 +62,13 @@ public class MRUATextScript : MonoBehaviour
         {
             StateMachine();
         }
-        else
+        else if (isFirstTime)
         {
             updateGUIFormula();
+        }
+        else
+        {
+            text.text = MRUA_DEFAULT_TEXT;
         }
 
     }
@@ -88,6 +93,8 @@ public class MRUATextScript : MonoBehaviour
 
                     playerManager.isThrowDone = false;
                 }
+
+                isFirstTime = false;
 
                 break;
 

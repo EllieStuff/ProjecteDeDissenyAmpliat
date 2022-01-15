@@ -48,6 +48,11 @@ public class PlayerManagerScript : MonoBehaviour
 
     private bool repetitionPlayed = false;
 
+    private Animator animator;
+
+    private GameObject resetWeapon;
+    public GameObject resetHandWeapon;
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +61,7 @@ public class PlayerManagerScript : MonoBehaviour
 
         collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
 
-        throwItemsFather = transform.GetChild(0);
+        throwItemsFather = GameObject.Find("ThrowItems").transform;
         //currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
 
         dragScript = GetComponent<DragPlayer>();
@@ -65,6 +70,10 @@ public class PlayerManagerScript : MonoBehaviour
 
         trajectoryScript = transform.GetChild(2).GetComponentInChildren<TrajectoryCalculator>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
+
+        animator = transform.GetChild(0).GetComponent<Animator>();
+
+        resetWeapon = GameObject.Find("ResetWeapon");
 
         //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         //initialPosSlider.maxValue = initalPosArray.Length - 1;
@@ -112,6 +121,15 @@ public class PlayerManagerScript : MonoBehaviour
             case State.EDITING_ITEM:
                 SetChosenItem();
 
+                animator.SetBool("Throw", false);
+                animator.SetBool("Restart", true);
+
+                Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
+                objective.SetBool("Dead", false);
+                objective.SetBool("Revive", true);
+
+                throwItemsFather.parent = resetHandWeapon.transform;
+
                 break;
 
             case State.EDITING_POS:
@@ -124,6 +142,9 @@ public class PlayerManagerScript : MonoBehaviour
                 initForce = GetInitialForce();
 
                 trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, currItem.RB.mass);
+
+                animator.SetBool("Restart", false);
+                animator.SetBool("Aim", true);
 
                 break;
 
@@ -175,6 +196,7 @@ public class PlayerManagerScript : MonoBehaviour
                 //break;
 
             case State.THROWING:
+
                 currItem.RB.isKinematic = false;
                 //Debug.Log("moveDir: " + moveDir);
                 //Debug.Log("initForce: " + initForce);
@@ -186,7 +208,14 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.WAITING_FOR_THROW:
                 // Interact On Collision
+
+                throwItemsFather.parent = resetWeapon.transform;
+
                 isThrowDone = true;
+
+                animator.SetBool("Aim", false);
+                animator.SetBool("Throw", true);
+
                 break;
 
             case State.THROW_DONE:

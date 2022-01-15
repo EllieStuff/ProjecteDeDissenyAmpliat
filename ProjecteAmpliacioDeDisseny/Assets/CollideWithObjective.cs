@@ -10,6 +10,15 @@ public class CollideWithObjective : MonoBehaviour
         {
             GameObject.Find("Canvas").GetComponent<EndLevel>().HasCollided();
             GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>().SaveValknauts();
+
+            Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
+            objective.SetBool("Dead", true);
+            objective.SetBool("Revive", false);
         }
+        else
+        {
+            this.gameObject.GetComponent<ThrowItemScript>().canRotate = false;
+        }
+
     }
 }
