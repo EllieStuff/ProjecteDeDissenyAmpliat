@@ -51,6 +51,7 @@ public class PlayerManagerScript : MonoBehaviour
     private Animator animator;
 
     private GameObject resetWeapon;
+    public GameObject resetHandWeapon;
 
 
     // Start is called before the first frame update
@@ -122,6 +123,12 @@ public class PlayerManagerScript : MonoBehaviour
 
                 animator.SetBool("Throw", false);
                 animator.SetBool("Restart", true);
+
+                Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
+                objective.SetBool("Dead", false);
+                objective.SetBool("Revive", true);
+
+                throwItemsFather.parent = resetHandWeapon.transform;
 
                 break;
 
