@@ -25,6 +25,7 @@ public class DragItem : MonoBehaviour
     private void OnMouseDrag()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Debug.Log(mousePos);
         transform.position = mousePos;
 
     }
@@ -46,7 +47,7 @@ public class DragItem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if (other.tag == "Player")
         {
             touchingPlayer = true;
         }

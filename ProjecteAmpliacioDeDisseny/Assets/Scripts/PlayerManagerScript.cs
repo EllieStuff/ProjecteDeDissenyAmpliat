@@ -61,7 +61,7 @@ public class PlayerManagerScript : MonoBehaviour
 
         collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
 
-        throwItemsFather = transform.Find("ThrowItems").transform;
+        throwItemsFather = GameObject.Find("ThrowItems").transform;
         //currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
 
         dragScript = GetComponent<DragPlayer>();
