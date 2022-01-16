@@ -75,6 +75,9 @@ public class PlayerManagerScript : MonoBehaviour
 
         resetWeapon = transform.Find("ResetWeapon").gameObject;
 
+
+        AudioManager.Play_SFX("LetsStart_SFX", false);
+
         //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         //initialPosSlider.maxValue = initalPosArray.Length - 1;
 
@@ -123,6 +126,8 @@ public class PlayerManagerScript : MonoBehaviour
                 if (currItem != null)
                     currItem.transform.position = resetHandWeapon.transform.position + new Vector3(0.3f, -0.3f, 0.0f);
 
+                throwItemsFather.parent = resetHandWeapon.transform;
+
                 break;
 
             case State.EDITING_POS:
@@ -135,8 +140,6 @@ public class PlayerManagerScript : MonoBehaviour
                 initForce = GetInitialForce();
                 trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, currItem.RB.mass);
 
-                currItem.transform.position = resetHandWeapon.transform.position;
-
                 break;
 
             case State.THROWING:
@@ -144,6 +147,12 @@ public class PlayerManagerScript : MonoBehaviour
                 currItem.RB.isKinematic = false;
                 currItem.RB.AddForce(initForce, ForceMode.Impulse);
                 changeStageButtons.EnableButtons(false);
+
+                isThrowDone = true;
+
+                animator.SetBool("Aim", false);
+                animator.SetBool("Throw", true);
+
 
                 NextState();
 
@@ -153,11 +162,6 @@ public class PlayerManagerScript : MonoBehaviour
                 // Interact On Collision
 
                 throwItemsFather.parent = resetWeapon.transform;
-
-                isThrowDone = true;
-
-                animator.SetBool("Aim", false);
-                animator.SetBool("Throw", true);
 
                 break;
 
@@ -288,18 +292,8 @@ public class PlayerManagerScript : MonoBehaviour
                     animator.SetBool("Restart", false);
                     animator.SetBool("Aim", true);
                 }
-                else
-                {
-                    animator.SetBool("Restart", true);
-                    animator.SetBool("Aim", false);
-                }
 
                 break;
-
-            //case State.EDITING_DIR:
-            //    trajectoryScript.gameObject.SetActive(_activate);
-
-            //    break;
 
             default:
                 break;

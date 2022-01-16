@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 295107204}
   - component: {fileID: 295107203}
   - component: {fileID: 295107202}
+  - component: {fileID: 295107205}
   m_Layer: 0
   m_Name: Level2Button
   m_TagString: Untagged
@@ -244,6 +245,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 295107200}
   m_CullTransparentMesh: 1
+--- !u!114 &295107205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 295107200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d707562b7b03047ad86ece6587fb84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 295107205}
+          m_TargetAssemblyTypeName: PlayOnButtonUp, Assembly-CSharp
+          m_MethodName: PlayButtonUpSFX
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &422036373
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +285,7 @@ GameObject:
   - component: {fileID: 422036376}
   - component: {fileID: 422036375}
   - component: {fileID: 422036374}
+  - component: {fileID: 422036377}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -323,10 +354,43 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1726614279}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &422036377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422036373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &443540374
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,6 +626,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588768729}
   m_CullTransparentMesh: 1
+--- !u!1001 &698966909
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 422036376}
+    m_Modifications:
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585701035106284439, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
 --- !u!1 &749719957
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,6 +1009,7 @@ GameObject:
   - component: {fileID: 1107826939}
   - component: {fileID: 1107826938}
   - component: {fileID: 1107826937}
+  - component: {fileID: 1107826940}
   m_Layer: 0
   m_Name: BackButton
   m_TagString: Untagged
@@ -1009,6 +1131,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1107826935}
   m_CullTransparentMesh: 1
+--- !u!114 &1107826940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107826935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d707562b7b03047ad86ece6587fb84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1107826940}
+          m_TargetAssemblyTypeName: PlayOnButtonUp, Assembly-CSharp
+          m_MethodName: PlayButtonUpSFX
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1222670054
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,6 +1319,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!4 &1726614279 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6585701035106284438, guid: 28da05e8581ec0242b5a22a56b1dafdb, type: 3}
+  m_PrefabInstance: {fileID: 698966909}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1848330124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,6 +1336,7 @@ GameObject:
   - component: {fileID: 1848330128}
   - component: {fileID: 1848330127}
   - component: {fileID: 1848330126}
+  - component: {fileID: 1848330129}
   m_Layer: 0
   m_Name: Level1Button
   m_TagString: Untagged
@@ -1301,6 +1458,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848330124}
   m_CullTransparentMesh: 1
+--- !u!114 &1848330129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848330124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d707562b7b03047ad86ece6587fb84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1848330129}
+          m_TargetAssemblyTypeName: PlayOnButtonUp, Assembly-CSharp
+          m_MethodName: PlayButtonUpSFX
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2095207731
 GameObject:
   m_ObjectHideFlags: 0

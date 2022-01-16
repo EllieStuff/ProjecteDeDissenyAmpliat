@@ -10,17 +10,19 @@ public class AudioManager : MonoBehaviour
     
     private static AudioSource SFX_AudioSource;
     private static AudioSource OST_AudioSource;
-    private static ValuesRecorder recorder;
+    private static ValuesRecorder recorder = null;
 
 
-    public void Start()
+    public void Awake()
     {
         SFX_AudioSource = transform.GetChild(0).GetComponent<AudioSource>();
         OST_AudioSource = transform.GetChild(1).GetComponent<AudioSource>();
 
         SFX_Volume = PlayerPrefs.GetFloat("sfxVolume", SFX_Volume);
         OST_Volume = PlayerPrefs.GetFloat("ostVolume", OST_Volume);
-        recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
+        GameObject recorderGO = GameObject.FindGameObjectWithTag("EventSystem");
+        if(recorderGO != null)
+            recorder = recorderGO.GetComponent<ValuesRecorder>();
 
         SFX_AudioSource.volume = SFX_Volume;
         OST_AudioSource.volume = OST_Volume;
@@ -43,7 +45,8 @@ public class AudioManager : MonoBehaviour
         SFX_AudioSource.volume = clipData.volume;
         SFX_AudioSource.pitch = clipData.pitch;
 
-        recorder.SetFrameSFX("GenericEinarLines/" + clipData.name);
+        if (recorder != null)
+            recorder.SetFrameSFX("GenericEinarLines/" + clipData.name);
 
         SFX_AudioSource.PlayOneShot(clipData.clip);
     }
@@ -60,7 +63,8 @@ public class AudioManager : MonoBehaviour
         SFX_AudioSource.volume = clipData.volume;
         SFX_AudioSource.pitch = clipData.pitch;
 
-        recorder.SetFrameSFX("RewindEinarLines/" + clipData.name);
+        if (recorder != null)
+            recorder.SetFrameSFX("RewindEinarLines/" + clipData.name);
 
         SFX_AudioSource.PlayOneShot(clipData.clip);
     }
@@ -79,7 +83,7 @@ public class AudioManager : MonoBehaviour
         if (_customPitch <= 0) SFX_AudioSource.pitch = clipData.pitch;
         else SFX_AudioSource.pitch = _customPitch;
 
-        if (_copyOnRecorder) 
+        if (_copyOnRecorder && recorder != null) 
             recorder.SetFrameSFX(_audioName);
 
         SFX_AudioSource.PlayOneShot(clipData.clip);
@@ -98,7 +102,7 @@ public class AudioManager : MonoBehaviour
         OST_AudioSource.volume = clipData.volume;
         OST_AudioSource.pitch = clipData.pitch;
 
-        if (_copyOnRecorder)
+        if (_copyOnRecorder && recorder != null)
             recorder.SetFrameOST(_audioName);
 
         OST_AudioSource.clip = clipData.clip;
