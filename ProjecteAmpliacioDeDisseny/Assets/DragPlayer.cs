@@ -29,8 +29,13 @@ public class DragPlayer : MonoBehaviour
     {
         if (this.enabled)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = mousePos;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1 << 7))
+            {
+                Debug.Log(hit.point);
+                transform.position = new Vector3(hit.point.x, hit.point.y, hit.transform.position.z);
+            }
         }
 
     }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1034120987635466125}
   - component: {fileID: 3982343730303647208}
   - component: {fileID: 1844358388213715237}
-  - component: {fileID: 2886196360801166686}
+  - component: {fileID: 4826316172337617889}
   m_Layer: 0
   m_Name: Valknut (1)
   m_TagString: Untagged
@@ -114,8 +114,8 @@ MonoBehaviour:
   changeRotDirTimes: {x: 0, y: 0.5, z: 0}
   frequency: 1
   stopOverTime: -1
---- !u!64 &2886196360801166686
-MeshCollider:
+--- !u!65 &4826316172337617889
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -124,10 +124,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2504952057260626483, guid: a060197089907b847a0f4d5f69dffe43, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.0044649155, y: 0.011286537, z: 0.011037111}
+  m_Center: {x: -0.000117297175, y: 0.00037705898, z: -0.0016252703}
 --- !u!1 &1538282735365393923
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +140,7 @@ GameObject:
   - component: {fileID: 1034120988314152918}
   - component: {fileID: 3982343728314756531}
   - component: {fileID: 1844358389120467326}
-  - component: {fileID: 2886196359573026053}
+  - component: {fileID: 2276503450231001315}
   m_Layer: 0
   m_Name: Valknut (2)
   m_TagString: Untagged
@@ -242,8 +241,8 @@ MonoBehaviour:
   changeRotDirTimes: {x: 0, y: 0.5, z: 0}
   frequency: 1
   stopOverTime: -1
---- !u!64 &2886196359573026053
-MeshCollider:
+--- !u!65 &2276503450231001315
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -252,10 +251,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2504952057260626483, guid: a060197089907b847a0f4d5f69dffe43, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.0044649155, y: 0.011286537, z: 0.011037111}
+  m_Center: {x: -0.000117297175, y: 0.00037705898, z: -0.0016252703}
 --- !u!1 &8951973930572975257
 GameObject:
   m_ObjectHideFlags: 0
