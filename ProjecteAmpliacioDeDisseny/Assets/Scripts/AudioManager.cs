@@ -30,24 +30,76 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    public static void Play_SFX(string _audioName)
+    public static void PlayRandomEinarGenericLine()
     {
-        SoundData clipData = Resources.Load<GameObject>("Audio/SFX/" + _audioName).GetComponent<SoundData>();
+        GameObject[] loadObjects = Resources.LoadAll<GameObject>("Audio/SFX/GenericEinarLines");
+        if (loadObjects == null)
+        {
+            Debug.LogError("Audio from Audio/SFX/GenericEinarLines not found");
+            return;
+        }
+
+        SoundData clipData = loadObjects[Random.Range(0, loadObjects.Length)].GetComponent<SoundData>();
         SFX_AudioSource.volume = clipData.volume;
         SFX_AudioSource.pitch = clipData.pitch;
 
-        recorder.SetFrameSFX(_audioName);
+        recorder.SetFrameSFX("GenericEinarLines/" + clipData.name);
+
+        SFX_AudioSource.PlayOneShot(clipData.clip);
+    }
+    public static void PlayRandomEinarRewindLine()
+    {
+        GameObject[] loadObjects = Resources.LoadAll<GameObject>("Audio/SFX/RewindEinarLines");
+        if (loadObjects == null)
+        {
+            Debug.LogError("Audio from Audio/SFX/RewindEinarLines not found");
+            return;
+        }
+
+        SoundData clipData = loadObjects[Random.Range(0, loadObjects.Length)].GetComponent<SoundData>();
+        SFX_AudioSource.volume = clipData.volume;
+        SFX_AudioSource.pitch = clipData.pitch;
+
+        recorder.SetFrameSFX("RewindEinarLines/" + clipData.name);
 
         SFX_AudioSource.PlayOneShot(clipData.clip);
     }
 
-    public static void Play_OST(string _audioName)
+    public static void Play_SFX(string _audioName, bool _copyOnRecorder = true, float _customPitch = -1.0f)
     {
-        SoundData clipData = Resources.Load<GameObject>("Audio/OST/" + _audioName).GetComponent<SoundData>();
+        GameObject loadObject = Resources.Load<GameObject>("Audio/SFX/" + _audioName);
+        if (loadObject == null)
+        {
+            Debug.LogError("Audio " + _audioName + " not found");
+            return;
+        }
+
+        SoundData clipData = loadObject.GetComponent<SoundData>();
+        SFX_AudioSource.volume = clipData.volume;
+        if (_customPitch <= 0) SFX_AudioSource.pitch = clipData.pitch;
+        else SFX_AudioSource.pitch = _customPitch;
+
+        if (_copyOnRecorder) 
+            recorder.SetFrameSFX(_audioName);
+
+        SFX_AudioSource.PlayOneShot(clipData.clip);
+    }
+
+    public static void Play_OST(string _audioName, bool _copyOnRecorder = true)
+    {
+        GameObject loadObject = Resources.Load<GameObject>("Audio/OST/" + _audioName);
+        if (loadObject == null)
+        {
+            Debug.LogError("Audio " + _audioName + " not found");
+            return;
+        }
+
+        SoundData clipData = loadObject.GetComponent<SoundData>();
         OST_AudioSource.volume = clipData.volume;
         OST_AudioSource.pitch = clipData.pitch;
 
-        recorder.SetFrameOST(_audioName);
+        if (_copyOnRecorder)
+            recorder.SetFrameOST(_audioName);
 
         OST_AudioSource.clip = clipData.clip;
         OST_AudioSource.Play();

@@ -2405,7 +2405,7 @@ MonoBehaviour:
   forceXSlider: {fileID: 1426460544}
   forceYSlider: {fileID: 34426587}
   replaySpeedButton: {fileID: 1621966010}
-  changeStageButtons: {fileID: 2001300332}
+  changeStageButtons: {fileID: 2001300334}
   currItemId: -1
   resetHandWeapon: {fileID: 4716374328257926061}
 --- !u!54 &808610689

@@ -6,6 +6,7 @@ public class DragPlayer : MonoBehaviour
 {
     [SerializeField] Transform initPlayerLocation;
 
+    PlayerManagerScript manager;
     Vector3 potentialPlayerLocation;
     Vector3 currPlayerLocation;
     bool touchingPlayerLocation = false;
@@ -14,13 +15,14 @@ public class DragPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        manager = GetComponent<PlayerManagerScript>();
         transform.position = currPlayerLocation = initPlayerLocation.GetChild(0).position;
     }
 
 
     private void OnMouseDown()
     {
-        AudioManager.Play_SFX("PickUpItem_SFX");
+        AudioManager.PlayRandomEinarGenericLine();
     }
 
     private void OnMouseDrag()
@@ -45,7 +47,8 @@ public class DragPlayer : MonoBehaviour
             transform.position = currPlayerLocation;
         }
 
-        AudioManager.Play_SFX("LetDownItem_SFX");
+        if (manager.currState == PlayerManagerScript.State.EDITING_POS)
+            AudioManager.Play_SFX("LetDownItem_SFX");
     }
 
     private void OnTriggerEnter(Collider other)

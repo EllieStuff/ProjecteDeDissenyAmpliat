@@ -119,8 +119,8 @@ public class ValuesRecorder : MonoBehaviour
                         }
                     }
 
-                    if (savedData[idx].sfxToPlay != null) AudioManager.Play_SFX(savedData[idx].sfxToPlay);
-                    if (savedData[idx].ostToPlay != null) AudioManager.Play_OST(savedData[idx].ostToPlay);
+                    if (savedData[idx].sfxToPlay != null) AudioManager.Play_SFX(savedData[idx].sfxToPlay, false);
+                    if (savedData[idx].ostToPlay != null) AudioManager.Play_OST(savedData[idx].ostToPlay, false);
 
 
                     // Creo que le he dado demasiadas vueltas y ni hace falta esto (???
