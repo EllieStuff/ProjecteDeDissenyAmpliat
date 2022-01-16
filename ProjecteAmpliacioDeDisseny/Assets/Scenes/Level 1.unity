@@ -1432,6 +1432,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 6.676
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0741daf0db97b9e4595a5ca4a2ef9d56, type: 3}
+      propertyPath: m_Name
+      value: SM_Env_DirtMound_04_Snow
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0741daf0db97b9e4595a5ca4a2ef9d56, type: 3}
 --- !u!4 &323198911 stripped
