@@ -121,15 +121,6 @@ public class PlayerManagerScript : MonoBehaviour
             case State.EDITING_ITEM:
                 SetChosenItem();
 
-                animator.SetBool("Throw", false);
-                animator.SetBool("Restart", true);
-
-                Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
-                objective.SetBool("Dead", false);
-                objective.SetBool("Revive", true);
-
-                throwItemsFather.parent = resetHandWeapon.transform;
-
                 break;
 
             case State.EDITING_POS:
@@ -142,9 +133,6 @@ public class PlayerManagerScript : MonoBehaviour
                 initForce = GetInitialForce();
 
                 trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, currItem.RB.mass);
-
-                animator.SetBool("Restart", false);
-                animator.SetBool("Aim", true);
 
                 break;
 
@@ -315,6 +303,17 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.EDITING_ITEM:
                 chooseWeaponGO.SetActive(_activate);
+                if (_activate)
+                {
+                    animator.SetBool("Throw", false);
+                    animator.SetBool("Restart", true);
+
+                    Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
+                    objective.SetBool("Dead", false);
+                    objective.SetBool("Revive", true);
+
+                    throwItemsFather.parent = resetHandWeapon.transform;
+                }
 
                 break;
 
@@ -330,7 +329,11 @@ public class PlayerManagerScript : MonoBehaviour
                 //ForceArrowsSetActive(_activate);
                 trajectoryScript.gameObject.SetActive(_activate);
                 if (_activate)
+                {
                     trajectoryScript.SetData(currItem.GetComponent<MeshFilter>().mesh, currItem.GetComponent<MeshRenderer>().material, currItem.transform.localScale);
+                    animator.SetBool("Restart", false);
+                    animator.SetBool("Aim", true);
+                }
 
                 break;
 
