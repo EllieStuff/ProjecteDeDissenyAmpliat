@@ -120,6 +120,8 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.EDITING_ITEM:
                 SetChosenItem();
+                if (currItem != null)
+                    currItem.transform.position = resetHandWeapon.transform.position + new Vector3(0.3f, -0.3f, 0.0f);
 
                 break;
 
@@ -131,57 +133,11 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.EDITING_FORCE:
                 initForce = GetInitialForce();
-
                 trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, currItem.RB.mass);
 
+                currItem.transform.position = resetHandWeapon.transform.position;
+
                 break;
-
-            //case State.EDITING_DIR:
-            //    if (!recorder.IsPlaying)
-            //    {
-            //        if (Input.GetKey(KeyCode.Mouse0) /*|| recorder.CurrFrameMousePressed*/)
-            //        {
-            //            Ray ray;
-            //            //if (recorder.IsPlaying) ray = Camera.main.ScreenPointToRay(recorder.CurrFrameMousePosition);
-            //            //else ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            //            RaycastHit hit;
-            //            if (Physics.Raycast(ray, out hit))
-            //            {
-            //                if (!hit.transform.tag.Equals("NoClickAreas"))
-            //                {
-            //                    //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-            //                    //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //                    mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            //                    moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
-            //                }
-
-            //            }
-            //            else
-            //            {
-            //                //if (recorder.IsPlaying) mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-            //                //else mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            //                moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
-            //            }
-
-            //        }
-
-            //    }
-            //    else
-            //    {
-            //        //mousePos = Camera.main.ScreenToWorldPoint(recorder.CurrFrameMousePosition);
-            //        //moveDir = ((Vector2)currItem.transform.position - mousePos).normalized;
-
-            //        moveDir = recorder.CurrFrameMoveDirItem;
-            //    }
-
-                //trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, moveDir, currItem.RB.mass);
-
-                //break;
 
             case State.THROWING:
 
@@ -311,8 +267,6 @@ public class PlayerManagerScript : MonoBehaviour
                     Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
                     objective.SetBool("Dead", false);
                     objective.SetBool("Revive", true);
-
-                    throwItemsFather.parent = resetHandWeapon.transform;
                 }
 
                 break;
@@ -333,6 +287,11 @@ public class PlayerManagerScript : MonoBehaviour
                     trajectoryScript.SetData(currItem.GetComponent<MeshFilter>().mesh, currItem.GetComponent<MeshRenderer>().material, currItem.transform.localScale);
                     animator.SetBool("Restart", false);
                     animator.SetBool("Aim", true);
+                }
+                else
+                {
+                    animator.SetBool("Restart", true);
+                    animator.SetBool("Aim", false);
                 }
 
                 break;
