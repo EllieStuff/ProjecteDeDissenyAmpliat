@@ -5,34 +5,54 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
+    float changeSceneDelay = 0.7f;
+
     public void Play()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        StartCoroutine(ChangeSceneCoroutine(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
     public void Exit()
     {
         Debug.Log("Saliendo");
-        Application.Quit();
+        StartCoroutine(QuitGameCoroutine());
     }
 
     public void LevelSelect(int _n)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + _n);
+        StartCoroutine(ChangeSceneCoroutine(SceneManager.GetActiveScene().buildIndex + _n));
     }
 
     public void Retry()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartCoroutine(ChangeSceneCoroutine(SceneManager.GetActiveScene().buildIndex));
     }
 
     public void GoLevelSelector()
     {
-        SceneManager.LoadScene("Level_Selector");
+        StartCoroutine(ChangeSceneCoroutine("Level_Selector"));
     }
 
     public void GoBack()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        StartCoroutine(ChangeSceneCoroutine(SceneManager.GetActiveScene().buildIndex - 1));
     }
+
+
+    IEnumerator ChangeSceneCoroutine(int _sceneIdx)
+    {
+        yield return new WaitForSeconds(changeSceneDelay);
+        SceneManager.LoadScene(_sceneIdx);
+    }
+    IEnumerator ChangeSceneCoroutine(string _sceneName)
+    {
+        yield return new WaitForSeconds(changeSceneDelay);
+        SceneManager.LoadScene(_sceneName);
+    }
+    IEnumerator QuitGameCoroutine()
+    {
+        yield return new WaitForSeconds(changeSceneDelay);
+        Application.Quit();
+    }
+
 }

@@ -75,6 +75,9 @@ public class PlayerManagerScript : MonoBehaviour
 
         resetWeapon = GameObject.Find("ResetWeapon");
 
+
+        AudioManager.Play_SFX("LetsStart_SFX", false);
+
         //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         //initialPosSlider.maxValue = initalPosArray.Length - 1;
 
