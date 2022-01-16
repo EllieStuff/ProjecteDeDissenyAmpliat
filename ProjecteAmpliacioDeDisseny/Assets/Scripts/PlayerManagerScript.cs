@@ -61,19 +61,19 @@ public class PlayerManagerScript : MonoBehaviour
 
         collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
 
-        throwItemsFather = GameObject.Find("ThrowItems").transform;
+        throwItemsFather = transform.Find("ThrowItems").transform;
         //currItem = throwItemsFather.GetChild(currItemId).GetComponent<ThrowItemScript>();
 
         dragScript = GetComponent<DragPlayer>();
         realInitPos = initPos = transform.position;
         realInitRot = transform.rotation;
 
-        trajectoryScript = transform.GetChild(2).GetComponentInChildren<TrajectoryCalculator>();
+        trajectoryScript = transform.Find("Feedback Items").GetComponentInChildren<TrajectoryCalculator>();
         recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
 
-        animator = transform.GetChild(0).GetComponent<Animator>();
+        animator = transform.Find("Character").GetComponent<Animator>();
 
-        resetWeapon = GameObject.Find("ResetWeapon");
+        resetWeapon = transform.Find("ResetWeapon").gameObject;
 
         //chooseItemSlider.maxValue = throwItemsFather.childCount - 1;
         //initialPosSlider.maxValue = initalPosArray.Length - 1;
