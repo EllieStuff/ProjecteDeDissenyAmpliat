@@ -22,7 +22,7 @@ public class PlayerManagerScript : MonoBehaviour
     public Slider forceYSlider;
 
     [SerializeField] GameObject replaySpeedButton;
-    [SerializeField] GameObject changeStageButtons;
+    [SerializeField] ChangeStageButtonsManager changeStageButtons;
 
     ChooseWeaponScript chooseWeaponScript;
     CollectiblesManager collectiblesManager;
@@ -174,9 +174,8 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.THROWING:
                 currItem.RB.isKinematic = false;
-                //Debug.Log("moveDir: " + moveDir);
-                //Debug.Log("initForce: " + initForce);
                 currItem.RB.AddForce(initForce, ForceMode.Impulse);
+                changeStageButtons.EnableButtons(false);
 
                 NextState();
 
@@ -204,6 +203,9 @@ public class PlayerManagerScript : MonoBehaviour
     {
         if(currItemId != chooseWeaponScript.currUsedIdx)
         {
+            if (!recorder.IsPlaying && currItemId < 0)
+                changeStageButtons.EnableButtons(true);
+
             if (recorder.IsRecording)
                 currItemId = chooseWeaponScript.currUsedIdx;
             else if (recorder.IsPlaying)
@@ -315,13 +317,6 @@ public class PlayerManagerScript : MonoBehaviour
     {
         if (currState < State.COUNT)
         {
-            if (currItem == null && currState >= State.EDITING_ITEM)
-            {
-                // ToDo: Play Impeding SFX
-
-                return;
-            }
-
             CurrStateSetActive(false);
             currState++;
             if (currState >= State.COUNT)
@@ -332,6 +327,7 @@ public class PlayerManagerScript : MonoBehaviour
                     ReinitValues();
                     collectiblesManager.RestartCollectibles();
                     AudioManager.Play_OST("ThinkingMusic");
+                    AudioManager.PlayRandomEinarRewindLine();
                     replaySpeedButton.SetActive(true);
                     currState = State.EDITING_ITEM;
                     forceXSlider.interactable = forceYSlider.interactable = false;
@@ -345,7 +341,7 @@ public class PlayerManagerScript : MonoBehaviour
                 else
                 {
                     recorder.StopPlaying();
-                    changeStageButtons.SetActive(false);
+                    changeStageButtons.gameObject.SetActive(false);
                     GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
                     GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
                 }

@@ -23,11 +23,13 @@ public class EndLevel : MonoBehaviour
         {
             index = 1;
             message = "You win!!!";
+            AudioManager.Play_SFX("YesWeDidIt_SFX");
         }
         else
         {
             index = 2;
             message = "Try again!!!";
+            AudioManager.Play_SFX("NoIFailed_SFX");
         }
 
         _generalUI.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = message;
