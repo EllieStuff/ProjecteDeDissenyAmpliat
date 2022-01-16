@@ -8,7 +8,7 @@ public class MRUATextScript : MonoBehaviour
 {
     private const string MRUA_DEFAULT_TEXT = "X = Xo + Vo.x * T <br><br>" +
                                              "Y = Yo + Vo.y * T + 1/2 * G * T^2";
-    
+
     private PlayerManagerScript playerManager;
     private ValuesRecorder recorder;
     private TextMeshProUGUI text;
@@ -22,9 +22,6 @@ public class MRUATextScript : MonoBehaviour
     private Vector2 minLine = new Vector2(-44, -42);
     private Vector2 maxLine = new Vector2(44, 42);
 
-    private RewindPostProcessController rewinder;
-
-    private bool isFirstTime = true;
 
     Vector2 initVel;
     float timePassed = 0.0f;
@@ -49,8 +46,6 @@ public class MRUATextScript : MonoBehaviour
 
         hPos = GameObject.Find("Horizontal Position").transform.GetChild(0).GetComponent<RectTransform>();
         vPos = GameObject.Find("Vertical Position").transform.GetChild(0).GetComponent<RectTransform>();
-
-        rewinder = GameObject.Find("Global Volume").GetComponent<RewindPostProcessController>();
     }
 
     // Update is called once per frame
@@ -62,13 +57,9 @@ public class MRUATextScript : MonoBehaviour
         {
             StateMachine();
         }
-        else if (isFirstTime)
-        {
-            updateGUIFormula();
-        }
         else
         {
-            text.text = MRUA_DEFAULT_TEXT;
+            updateGUIFormula();
         }
 
     }
@@ -89,12 +80,8 @@ public class MRUATextScript : MonoBehaviour
                     hPos.transform.parent.gameObject.SetActive(false);
                     vPos.transform.parent.gameObject.SetActive(false);
 
-                    rewinder.playAnimation = true;
-
                     playerManager.isThrowDone = false;
                 }
-
-                isFirstTime = false;
 
                 break;
 
@@ -103,7 +90,7 @@ public class MRUATextScript : MonoBehaviour
                 text.text = "X = " + finalInitPos.x.ToString("F2") + " + Vo.x * T <br><br>" +
                             "Y = " + finalInitPos.y.ToString("F2") + " + Vo.y * T + 1/2 * G * T^2";
 
-                
+
 
                 break;
 
@@ -130,7 +117,7 @@ public class MRUATextScript : MonoBehaviour
             case PlayerManagerScript.State.WAITING_FOR_THROW:
                 initVelProjected = playerManager.InitForce / playerManager.CurrItemMass;
                 float resultX = finalPos.x + (Mathf.Round(initVelProjected.x * 100) / 100) * (Mathf.Round(timePassed * 100) / 100);
-                float resultY = finalPos.y + (Mathf.Round(initVelProjected.y * 100) / 100) * (Mathf.Round(timePassed * 100) / 100) + (1/2) * 9.8f * Mathf.Pow((Mathf.Round(timePassed * 100) / 100), 2);
+                float resultY = finalPos.y + (Mathf.Round(initVelProjected.y * 100) / 100) * (Mathf.Round(timePassed * 100) / 100) + (1 / 2) * 9.8f * Mathf.Pow((Mathf.Round(timePassed * 100) / 100), 2);
                 text.text = resultX.ToString("F2") + " = " + finalPos.x.ToString("F2") + " + " + initVelProjected.x.ToString("F2") + " * " + (Mathf.Round(timePassed * 100) / 100).ToString("F2") + " <br><br>" +
                             resultY.ToString("F2") + " = " + finalPos.y.ToString("F2") + " + " + initVelProjected.y.ToString("F2") + " * " + (Mathf.Round(timePassed * 100) / 100).ToString("F2") + " + 1/2 * 9.8 * " + (Mathf.Round(timePassed * 100) / 100).ToString("F2") + "^2";
 
@@ -139,7 +126,7 @@ public class MRUATextScript : MonoBehaviour
                 break;
 
             case PlayerManagerScript.State.THROW_DONE:
-                
+
                 break;
 
             default:
@@ -161,7 +148,9 @@ public class MRUATextScript : MonoBehaviour
             vForce.fillAmount = playerManager.forceYSlider.value;
 
             float lenScreenX = maxScreen.x - minScreen.x;
-            float lenPScreenX = maxScreen.x - playerManager.CurrItemPos.x;
+            float lenPScreenX = 0;
+            if (playerManager.currItemId >= 0)
+                lenPScreenX = maxScreen.x - playerManager.CurrItemPos.x;
 
             float percentX = lenPScreenX * 100 / lenScreenX;
 
@@ -171,7 +160,9 @@ public class MRUATextScript : MonoBehaviour
 
 
             float lenScreenY = maxScreen.y - minScreen.y;
-            float lenPScreenY = maxScreen.y - playerManager.CurrItemPos.y;
+            float lenPScreenY = 0;
+            if (playerManager.currItemId >= 0)
+                lenPScreenY = maxScreen.y - playerManager.CurrItemPos.y;
 
             float percentY = lenPScreenY * 100 / lenScreenY;
 
@@ -182,7 +173,7 @@ public class MRUATextScript : MonoBehaviour
             hPos.transform.localPosition = new Vector2(Mathf.Clamp(posX, minLine.x, maxLine.x), 0);
             vPos.transform.localPosition = new Vector2(0, Mathf.Clamp(posY, minLine.y, maxLine.y));
         }
-        
+
     }
 
 }
