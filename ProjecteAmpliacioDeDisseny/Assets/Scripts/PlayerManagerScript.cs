@@ -134,11 +134,19 @@ public class PlayerManagerScript : MonoBehaviour
                 //transform.position = initPos = GetInitialPos(); --> Ara el PlayerSet es mou al script DragPlayer
                 trajectoryScript.transform.position = currItem.transform.position;
 
+                animator.SetBool("Restart", true);
+                animator.SetBool("Aim", false);
+                animator.SetBool("Throw", false);
+
                 break;
 
             case State.EDITING_FORCE:
                 initForce = GetInitialForce();
                 trajectoryScript.CalculateTrajectory(currItem.transform.position, initForce, currItem.RB.mass);
+
+                animator.SetBool("Restart", false);
+                animator.SetBool("Aim", true);
+                animator.SetBool("Throw", false);
 
                 break;
 
@@ -150,6 +158,7 @@ public class PlayerManagerScript : MonoBehaviour
 
                 isThrowDone = true;
 
+                animator.SetBool("Restart", false);
                 animator.SetBool("Aim", false);
                 animator.SetBool("Throw", true);
 
@@ -265,10 +274,12 @@ public class PlayerManagerScript : MonoBehaviour
                 chooseWeaponGO.SetActive(_activate);
                 if (_activate)
                 {
-                    animator.SetBool("Throw", false);
                     animator.SetBool("Restart", true);
+                    animator.SetBool("Aim", false);
+                    animator.SetBool("Throw", false);
 
                     Animator objective = GameObject.Find("Objective").GetComponent<Animator>();
+
                     objective.SetBool("Dead", false);
                     objective.SetBool("Revive", true);
                 }
@@ -278,6 +289,10 @@ public class PlayerManagerScript : MonoBehaviour
             case State.EDITING_POS:
                 dragScript.enabled = _activate;
                 choosePositionScript.SetCharacterPreviewsActive(_activate);
+
+                animator.SetBool("Restart", true);
+                animator.SetBool("Aim", false);
+                animator.SetBool("Throw", false);
 
                 break;
 
@@ -289,9 +304,19 @@ public class PlayerManagerScript : MonoBehaviour
                 if (_activate)
                 {
                     trajectoryScript.SetData(currItem.GetComponent<MeshFilter>().mesh, currItem.GetComponent<MeshRenderer>().material, currItem.transform.localScale);
+
                     animator.SetBool("Restart", false);
                     animator.SetBool("Aim", true);
+                    animator.SetBool("Throw", false);
                 }
+
+                break;
+
+            case State.WAITING_FOR_THROW:
+
+                animator.SetBool("Restart", false);
+                animator.SetBool("Aim", false);
+                animator.SetBool("Throw", true);
 
                 break;
 
