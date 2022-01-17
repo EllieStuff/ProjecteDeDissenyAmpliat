@@ -1215,6 +1215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 501138554}
   - component: {fileID: 501138556}
+  - component: {fileID: 501138558}
   - component: {fileID: 501138555}
   - component: {fileID: 501138557}
   m_Layer: 0
@@ -1359,6 +1360,20 @@ MonoBehaviour:
   frequency: 1
   stopOverTime: -1
   startDelay: 0
+--- !u!114 &501138558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501138553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9609404989870524ab4f8ecbc96d2a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelName: Level 1
+  valknautsTotalAmount: 2
 --- !u!1 &588768729
 GameObject:
   m_ObjectHideFlags: 0
@@ -2209,6 +2224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1113964764}
   - component: {fileID: 1113964767}
+  - component: {fileID: 1113964768}
   - component: {fileID: 1113964766}
   - component: {fileID: 1113964765}
   m_Layer: 0
@@ -2353,6 +2369,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113964763}
   m_CullTransparentMesh: 1
+--- !u!114 &1113964768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113964763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9609404989870524ab4f8ecbc96d2a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelName: Level 2
+  valknautsTotalAmount: 2
 --- !u!1 &1204978068
 GameObject:
   m_ObjectHideFlags: 0
@@ -2580,6 +2610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1349258769}
   - component: {fileID: 1349258772}
+  - component: {fileID: 1349258773}
   - component: {fileID: 1349258771}
   - component: {fileID: 1349258770}
   m_Layer: 0
@@ -2724,6 +2755,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1349258768}
   m_CullTransparentMesh: 1
+--- !u!114 &1349258773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349258768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9609404989870524ab4f8ecbc96d2a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelName: Tutorial
+  valknautsTotalAmount: 2
 --- !u!1 &1432910443
 GameObject:
   m_ObjectHideFlags: 0
@@ -3305,6 +3350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1790921600}
   - component: {fileID: 1790921603}
+  - component: {fileID: 1790921604}
   - component: {fileID: 1790921602}
   - component: {fileID: 1790921601}
   m_Layer: 0
@@ -3449,6 +3495,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1790921599}
   m_CullTransparentMesh: 1
+--- !u!114 &1790921604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790921599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9609404989870524ab4f8ecbc96d2a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelName: Level 3
+  valknautsTotalAmount: 2
 --- !u!1 &1848330124
 GameObject:
   m_ObjectHideFlags: 0
