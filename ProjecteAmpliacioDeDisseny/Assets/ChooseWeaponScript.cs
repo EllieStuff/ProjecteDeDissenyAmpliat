@@ -16,7 +16,7 @@ public class ChooseWeaponScript : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         playerManager = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
         weaponsList = new Transform[transform.childCount];

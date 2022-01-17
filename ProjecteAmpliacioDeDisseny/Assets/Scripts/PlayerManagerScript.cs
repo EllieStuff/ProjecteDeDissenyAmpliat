@@ -189,6 +189,7 @@ public class PlayerManagerScript : MonoBehaviour
 
     public void SetChosenItem()
     {
+        
         if(currItemId != chooseWeaponScript.currUsedIdx)
         {
             if (!recorder.IsPlaying && currItemId < 0)
@@ -216,6 +217,7 @@ public class PlayerManagerScript : MonoBehaviour
             //    currItem.transform.rotation = realInitRot;
 
         }
+        
 
 
     }
