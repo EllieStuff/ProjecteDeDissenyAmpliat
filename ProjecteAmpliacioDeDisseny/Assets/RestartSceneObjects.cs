@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class RestartSceneObjects : MonoBehaviour
 {
@@ -48,8 +49,13 @@ public class RestartSceneObjects : MonoBehaviour
             Transform child = this.transform.GetChild(i);
             child.position = _sceneObjectsPos[i];
             child.rotation = _sceneObjectsRot[i];
-            Rigidbody childRb = child.GetComponent<Rigidbody>();
-            childRb.velocity = childRb.angularVelocity = Vector3.zero;
+            try
+            {
+                Rigidbody childRb = child.GetComponent<Rigidbody>();
+                childRb.velocity = childRb.angularVelocity = Vector3.zero;
+            }
+            catch { }
+
         }
 
         for (int i = 0; i < throwChildCount; i++)
@@ -63,8 +69,14 @@ public class RestartSceneObjects : MonoBehaviour
     {
         for (int i = 0; i < sObjectsChildCount; i++)
         {
-            this.transform.GetChild(i).GetComponent<Rigidbody>().useGravity = isActive;
-            this.transform.GetChild(i).GetComponent<Rigidbody>().isKinematic = !isActive;
+            try
+            {
+                Rigidbody childRb = this.transform.GetChild(i).GetComponent<Rigidbody>();
+                childRb.useGravity = isActive;
+                childRb.isKinematic = !isActive;
+            }
+            catch { }
+            
         }
     }
 }
