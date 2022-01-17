@@ -104,7 +104,8 @@ public class ValuesRecorder : MonoBehaviour
                     {
                         for (int i = 0; i < chooseItemsScript.WeaponsAmount; i++)
                         {
-                            chooseItemsScript.WeaponList[i].position = savedData[idx].chooseItems[i];
+                            if(savedData[idx].chooseItems != null)
+                                chooseItemsScript.WeaponList[i].position = savedData[idx].chooseItems[i];
 
                             if (savedData[idx].choosenItemId == i)
                             {
