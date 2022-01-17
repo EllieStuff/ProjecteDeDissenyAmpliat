@@ -33,7 +33,6 @@ public class DragPlayer : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1 << 7))
             {
-                Debug.Log(hit.point);
                 transform.position = new Vector3(hit.point.x, hit.point.y, hit.transform.position.z);
             }
         }

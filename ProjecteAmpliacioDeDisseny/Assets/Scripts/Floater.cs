@@ -10,12 +10,14 @@ public class Floater : MonoBehaviour
     public Vector3 changeRotDirTimes = new Vector3(5.0f, 5.0f, 0.0f);
     public float frequency = 1f;
     public float stopOverTime = -1;
+    public float startDelay = 0;
 
     private Vector3Int rotDir = new Vector3Int(1, 1, 1);
 
     // Position Storage Variables
     Vector3 posOffset = new Vector3();
     Vector3 tempPos = new Vector3();
+    bool inited = false;
     //Vector3 axisOffset = new Vector3();
     //float angleOffset;
 
@@ -24,32 +26,42 @@ public class Floater : MonoBehaviour
     {
         // Store the starting position & rotation of the object
         posOffset = transform.position;
+        if (startDelay < 0) startDelay = 0;
 
         //StartCoroutine(ChangeRotDirCoroutine());
     }
 
     private void OnEnable()
     {
-        StartCoroutine(ChangeRotDirCoroutine());
+        StartCoroutine(InitCoroutine());
+        //StartCoroutine(ChangeRotDirCoroutine());
 
-        if (stopOverTime > 0)
-            StartCoroutine(StopOverTime());
+        //if (stopOverTime > 0)
+        //    StartCoroutine(StopOverTime());
+    }
+    private void OnDisable()
+    {
+        inited = false;
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        // Spin object around Y-Axis
-        transform.Rotate(new Vector3(Time.deltaTime * rotSpeed.x * rotDir.x, Time.deltaTime * rotSpeed.y * rotDir.y, Time.deltaTime * rotSpeed.z * rotDir.z), Space.World);
+        if (inited)
+        {
+            // Spin object around Y-Axis
+            transform.Rotate(new Vector3(Time.deltaTime * rotSpeed.x * rotDir.x, Time.deltaTime * rotSpeed.y * rotDir.y, Time.deltaTime * rotSpeed.z * rotDir.z), Space.World);
 
-        // Float up/down with a Sin()
-        tempPos = posOffset;
-        tempPos.x += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * speed.x;
-        tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * speed.y;
-        tempPos.z += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * speed.z;
+            // Float up/down with a Sin()
+            tempPos = posOffset;
+            tempPos.x += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * speed.x;
+            tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * speed.y;
+            tempPos.z += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * speed.z;
 
-        transform.position = tempPos;
+            transform.position = tempPos;
+        }
+
     }
 
 
@@ -105,6 +117,17 @@ public class Floater : MonoBehaviour
         speed = Vector3.zero;
         rotSpeed = Vector3.zero;
 
+    }
+
+    IEnumerator InitCoroutine()
+    {
+        yield return new WaitForSeconds(startDelay);
+        inited = true;
+
+        StartCoroutine(ChangeRotDirCoroutine());
+
+        if (stopOverTime > 0)
+            StartCoroutine(StopOverTime());
     }
 
 }
