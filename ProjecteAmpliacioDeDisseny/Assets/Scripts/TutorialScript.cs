@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class TutorialScript : MonoBehaviour
 {
     public int _tutoState;
-    public Image img0, img1, img2, img3, imgWin, odinChikito;
+    public Image img0, img1, img2, img3, img4, imgWin, odinChikito;
     public bool _tutoActive;
     public int lastTutoState;
 
@@ -20,6 +20,7 @@ public class TutorialScript : MonoBehaviour
         img1.gameObject.SetActive(false);
         img2.gameObject.SetActive(false);
         img3.gameObject.SetActive(false);
+        img4.gameObject.SetActive(false);
         imgWin.gameObject.SetActive(false);
         odinChikito.gameObject.SetActive(false);
     }
@@ -60,14 +61,22 @@ public class TutorialScript : MonoBehaviour
                 img1.gameObject.SetActive(false);
                 img2.gameObject.SetActive(false);
                 img3.gameObject.SetActive(false);
+                img4.gameObject.SetActive(false);
                 imgWin.gameObject.SetActive(false);
                 odinChikito.gameObject.SetActive(false);
+                Debug.Log("in");
+                break;
+            case 7:
+                img3.gameObject.SetActive(false);
+                img4.gameObject.SetActive(true);
+                odinChikito.gameObject.SetActive(true);
                 break;
             default:                                // Acaba tutorial 
                 img0.gameObject.SetActive(false);
                 img1.gameObject.SetActive(false);
                 img2.gameObject.SetActive(false);
                 img3.gameObject.SetActive(false);
+                img4.gameObject.SetActive(false);
                 imgWin.gameObject.SetActive(false);
                 odinChikito.gameObject.SetActive(false);
                 _tutoActive = false;

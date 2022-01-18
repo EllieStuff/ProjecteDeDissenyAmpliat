@@ -73,7 +73,10 @@ public class ReplaySpeedButtonScript : MonoBehaviour
         changeSpeedButton.gameObject.SetActive(false);
         skipButton.gameObject.SetActive(false);
         GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
-        GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
+        if (playerScript.tutorial == null)
+            GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
+        else
+            playerScript.tutorial._tutoState = 4;
     }
 
 }

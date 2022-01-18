@@ -173,8 +173,17 @@ public class ValuesRecorder : MonoBehaviour
     [ContextMenu("StartPlaying")]
     public void StartPlaying()
     {
-        Time.timeScale = initReplayTimeScale;
-        recorderState = RecorderState.PLAYING;
+        if (playerScript.tutorial != null && playerScript.tutorial.lastTutoState != 7)
+        {
+            playerScript.tutorial._tutoState = 7;
+            recorderState = RecorderState.OFF;
+        }
+        else
+        {
+            Time.timeScale = initReplayTimeScale;
+            recorderState = RecorderState.PLAYING;
+        }
+
     }
     [ContextMenu("ReStartPlaying")]
     public void ReStartPlaying()

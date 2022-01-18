@@ -53,7 +53,7 @@ public class PlayerManagerScript : MonoBehaviour
     private GameObject resetWeapon;
     public GameObject resetHandWeapon;
 
-    [SerializeField] TutorialScript tutorial;
+    public TutorialScript tutorial;
     private bool _textShowed;
     // Start is called before the first frame update
     void Start()
@@ -121,8 +121,22 @@ public class PlayerManagerScript : MonoBehaviour
 
     private void Update()
     {
-        if (!recorder.IsPlaying)
+        if (!recorder.IsWorking)
+        {
+            if (tutorial != null && tutorial.lastTutoState != 7 && tutorial._tutoState == 7)
+            {
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    tutorial.lastTutoState = 7;
+                    tutorial._tutoState = 5;
+                    recorder.StartPlaying();
+                }
+            }
+        }
+        else if (!recorder.IsPlaying)
+        {
             TutorialStateMachine();
+        }
     }
 
     void TutorialStateMachine()
