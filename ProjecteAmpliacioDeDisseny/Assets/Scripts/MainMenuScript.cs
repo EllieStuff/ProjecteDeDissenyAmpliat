@@ -30,12 +30,25 @@ public class MainMenuScript : MonoBehaviour
 
     public void GoLevelSelector()
     {
+        Time.timeScale = 1.0f;
         StartCoroutine(ChangeSceneCoroutine("Level_Selector"));
     }
 
     public void GoBack()
     {
         StartCoroutine(ChangeSceneCoroutine(SceneManager.GetActiveScene().buildIndex - 1));
+    }
+
+    public void ShowInGameMenu(GameObject _inGameMenu)
+    {
+        _inGameMenu.SetActive(true);
+        Time.timeScale = 0.0f;
+    }
+
+    public void CloseInGameMenu(GameObject _inGameMenu)
+    {
+        Time.timeScale = 1.0f;
+        _inGameMenu.SetActive(false);
     }
 
 
