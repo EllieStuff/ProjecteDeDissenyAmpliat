@@ -53,10 +53,12 @@ public class PlayerManagerScript : MonoBehaviour
     private GameObject resetWeapon;
     public GameObject resetHandWeapon;
 
-
+    [SerializeField] TutorialScript tutorial;
+    private bool _textShowed;
     // Start is called before the first frame update
     void Start()
     {
+        _textShowed = false;
         chooseWeaponScript = chooseWeaponGO.GetComponentInChildren<ChooseWeaponScript>();
 
         collectiblesManager = GameObject.FindGameObjectWithTag("CollectiblesManager").GetComponent<CollectiblesManager>();
@@ -101,15 +103,77 @@ public class PlayerManagerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //if (tutorial != null)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Mouse0))
+        //    {
+        //        tutorial._tutoState = 5;
+        //        _textShowed = false;
+        //    }
+        //}
         StateMachine();
 
         //if ((int)currState >= (int)State.EDITING_FORCE)
         //    Debug.DrawRay(currItem.transform.position, moveDir, Color.red);
+        
 
     }
 
+    private void Update()
+    {
+        if (!recorder.IsPlaying)
+            TutorialStateMachine();
+    }
 
+    void TutorialStateMachine()
+    {
+        if (tutorial != null)
+        {
+            switch (currState)
+            {
+                case State.EDITING_ITEM:
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && tutorial._tutoActive)
+                    {
+                        if (tutorial._tutoState == 0)
+                        {
+                            tutorial._tutoState = 1;
+                        }
+                        else if (tutorial._tutoState == 1)
+                        {
+                            tutorial._tutoState = 5;
+                        }
+                    }
+                    break;
+                case State.EDITING_POS:
+                    if (tutorial._tutoActive && tutorial.lastTutoState != 2)
+                    {
+                        tutorial._tutoState = 2;
+                        tutorial.lastTutoState = 2;
+                    }
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && tutorial._tutoActive && tutorial._tutoState == 2) tutorial._tutoState = 5;
+                    break;
+                case State.EDITING_FORCE:
+                    if (tutorial._tutoActive && tutorial.lastTutoState != 3)
+                    {
+                        tutorial._tutoState = 3;
+                        tutorial.lastTutoState = 3;
+                    }
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && tutorial._tutoActive && tutorial._tutoState == 3) tutorial._tutoState = 5;
+                    break;
+                case State.THROW_DONE:
+                    if (tutorial._tutoActive && tutorial.lastTutoState != 4)
+                    {
+                        tutorial._tutoState = 4;
+                        tutorial.lastTutoState = 4;
+                    }
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && tutorial._tutoActive && tutorial._tutoState == 4) tutorial._tutoState = 5;
+                    break;
+                default:
+                    break;
 
+            }
+        }
+    }
     void StateMachine()
     {
         switch (currState)
@@ -132,6 +196,7 @@ public class PlayerManagerScript : MonoBehaviour
 
             case State.EDITING_POS:
                 //transform.position = initPos = GetInitialPos(); --> Ara el PlayerSet es mou al script DragPlayer
+
                 trajectoryScript.transform.position = currItem.transform.position;
 
                 animator.SetBool("Restart", true);
@@ -357,7 +422,12 @@ public class PlayerManagerScript : MonoBehaviour
                     recorder.StopPlaying();
                     changeStageButtons.gameObject.SetActive(false);
                     GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
-                    GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
+                    if (tutorial != null)
+                    {
+                        if (tutorial._tutoActive) tutorial._tutoState = 4;
+                    }
+                    else
+                        GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
                 }
             }
             CurrStateSetActive(true);
@@ -365,8 +435,7 @@ public class PlayerManagerScript : MonoBehaviour
 
             if (recorder.IsRecording) 
                 recorder.SetFrameButtomState(ValuesRecorder.ButtonsState.FRONTWARD);
-        }
-
+        }   
     }
     public void LastState()
     {
