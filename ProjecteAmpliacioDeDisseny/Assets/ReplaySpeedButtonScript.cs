@@ -16,7 +16,8 @@ public class ReplaySpeedButtonScript : MonoBehaviour
     [SerializeField] Transform lerpDefault;
 
     PlayerManagerScript playerScript;
-    Transform button;
+    ValuesRecorder recorder;
+    Transform changeSpeedButton, skipButton;
     TextMeshProUGUI buttonText;
     PlayerManagerScript.State savedState = PlayerManagerScript.State.DEFAULT;
     Vector2 lerpTarget;
@@ -26,8 +27,10 @@ public class ReplaySpeedButtonScript : MonoBehaviour
     private void Start()
     {
         playerScript = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManagerScript>();
-        button = transform.GetChild(0);
-        buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+        recorder = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<ValuesRecorder>();
+        changeSpeedButton = transform.GetChild(0);
+        buttonText = changeSpeedButton.GetComponentInChildren<TextMeshProUGUI>();
+        skipButton = transform.GetChild(1);
 
         buttonText.text = "x" + timeSpeeds[speedIdx].ToString("F1");
         gameObject.SetActive(false);
@@ -46,9 +49,9 @@ public class ReplaySpeedButtonScript : MonoBehaviour
 
         }
 
-        if(Vector2.Distance(button.position, lerpTarget) >= MARGIN)
+        if(Vector2.Distance(changeSpeedButton.position, lerpTarget) >= MARGIN)
         {
-            button.position = Vector2.Lerp(button.position, lerpTarget, lerpSpeed * Time.deltaTime);
+            changeSpeedButton.position = Vector2.Lerp(changeSpeedButton.position, lerpTarget, lerpSpeed * Time.deltaTime);
         }
 
     }
@@ -62,5 +65,15 @@ public class ReplaySpeedButtonScript : MonoBehaviour
         buttonText.text = "x" + timeSpeeds[speedIdx].ToString("F1");
     }
 
+
+    public void SkipButton()
+    {
+        recorder.StopPlaying();
+        //Time.timeScale = 0;
+        changeSpeedButton.gameObject.SetActive(false);
+        skipButton.gameObject.SetActive(false);
+        GameObject.Find("Main Camera").GetComponent<VHSPostProcessEffect>().enabled = false;
+        GameObject.Find("Canvas").GetComponent<EndLevel>().StartEndLevelUI();
+    }
 
 }

@@ -75,11 +75,9 @@ public class ChooseWeaponScript : MonoBehaviour
     {
         if (playerManager.currState != PlayerManagerScript.State.EDITING_ITEM)
         {
-            Debug.Log("out");
             return null;
         }
 
-        Debug.Log("in");
         Vector2[] posList = new Vector2[weaponsList.Length];
         for (int i = 0; i < posList.Length; i++)
             posList[i] = weaponsList[i].position;

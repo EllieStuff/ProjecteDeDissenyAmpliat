@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -97,8 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: a1b8b5fbd7a61bb43a74f7e1d9c9cb5f, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: b8eba599764c86743a5441b31595f8b8, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -17077,6 +17077,7 @@ MonoBehaviour:
   changeStageButtons: {fileID: 2887226083246083167}
   currItemId: -1
   resetHandWeapon: {fileID: 7593792062491505820}
+  tutorial: {fileID: 0}
 --- !u!114 &2887226082092321970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24613,6 +24614,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2863543676591339629}
     m_Modifications:
+    - target: {fileID: 3547338772084312253, guid: b81e517b6c3669b45bfae84bd022cf87, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.57642996
+      objectReference: {fileID: 0}
+    - target: {fileID: 3547338772084312253, guid: b81e517b6c3669b45bfae84bd022cf87, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.23447089
+      objectReference: {fileID: 0}
+    - target: {fileID: 3547338772084312253, guid: b81e517b6c3669b45bfae84bd022cf87, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5123367
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683982831301723337, guid: b81e517b6c3669b45bfae84bd022cf87, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SkipButton
+      objectReference: {fileID: 0}
     - target: {fileID: 8943235183071763790, guid: b81e517b6c3669b45bfae84bd022cf87, type: 3}
       propertyPath: m_Name
       value: Canvas
