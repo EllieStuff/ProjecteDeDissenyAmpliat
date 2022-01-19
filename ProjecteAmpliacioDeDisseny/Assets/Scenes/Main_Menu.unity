@@ -1698,7 +1698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6963b8864b474be4ca9479371f86b63d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: {x: 1, y: 1, z: 0}
+  speed: {x: 0.3, y: 0.3, z: 0}
   rotSpeed: {x: 0, y: -5, z: 0}
   applyChangeRotDir: 1
   changeRotDirTimes: {x: 5, y: 3, z: 0}
